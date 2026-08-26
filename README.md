@@ -23,10 +23,10 @@ Projeto piloto: um CRAS parceiro terá informações completas (horários, servi
 
 ## Equipe
 
--Andressa — prototipagem das telas
-- Ana Carla — frontend 
 - Brunna Luyza — backend, banco de dados e API
-- Maria Eduarda — documentação e relacionamento com o CRAS
+- Maria — documentação e relacionamento com o CRAS
+- Andressa — prototipagem das telas
+- Ana Carla — frontend
 
 
 ## Como rodar o projeto
