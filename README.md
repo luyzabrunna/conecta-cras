@@ -19,14 +19,15 @@ Projeto piloto: um CRAS parceiro terá informações completas (horários, servi
 
 - **Frontend:** HTML, CSS e JavaScript
 - **Backend:** Node.js + Express
-- **Banco de dados:** SQLite
+- **Banco de dados:** MySQL (gerenciado via phpMyAdmin)
 
 ## Equipe
 
-- Luyza — backend, banco de dados e API
-- [Integrante 2] — levantamento de requisitos e validação das informações
-- [Integrante 3] — frontend público
-- [Integrante 4] — painel administrativo, testes e documentação
+-Andressa — prototipagem das telas
+- Ana Carla — frontend 
+- Brunna Luyza — backend, banco de dados e API
+- Maria Eduarda — documentação e relacionamento com o CRAS
+
 
 ## Como rodar o projeto
 
