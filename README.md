@@ -18,34 +18,50 @@ Projeto piloto: um CRAS parceiro terá informações completas (horários, servi
 ## Stack
 
 - **Frontend:** HTML, CSS e JavaScript
-- **Backend:** Node.js + Express
-- **Banco de dados:** MySQL (gerenciado via phpMyAdmin)
+- **Backend:** Node.js + Express, em arquitetura de camadas (routes, controllers, models)
+- **Banco de dados:** MySQL, gerenciado via phpMyAdmin
+- **Ambiente:** Docker (sobe o MySQL e o phpMyAdmin, sem precisar instalar nada localmente)
 
 ## Equipe
 
-- Brunna Luyza — backend, banco de dados e API
-- Maria — documentação e relacionamento com o CRAS
+- Brunna Luyza — backend e API
+- Maria — documentação, relacionamento com o CRAS e banco de dados
 - Andressa — prototipagem das telas
-- Ana Carla — frontend
-
-
+- Ana Carla — frontend 
 ## Como rodar o projeto
 
+Pré-requisitos: [Node.js](https://nodejs.org) e [Docker Desktop](https://www.docker.com/products/docker-desktop) instalados.
+
 ```bash
+# subir o banco de dados
+docker compose up -d
+
+# configurar variáveis de ambiente (só na primeira vez)
 cd backend
+cp .env.example .env
+
+# instalar dependências e rodar o servidor
 npm install
 npm start
 ```
 
-O servidor deve subir em `http://localhost:3000`.
+O site sobe em `http://localhost:3000`, o painel administrativo em `http://localhost:3000/admin`, e o phpMyAdmin em `http://localhost:8080` (usuário `root`, senha `root`).
+
+Guia completo com passo a passo detalhado e checklist de erros comuns em [`COMO-COLABORAR.md`](./COMO-COLABORAR.md).
 
 ## Estrutura de pastas
 
 ```
 conecta-cras/
-├── backend/        # API, servidor Express e banco de dados
+├── backend/
+│   ├── config/       # conexão com o banco de dados
+│   ├── models/        # queries no banco de dados
+│   ├── controllers/   # lógica das requisições
+│   ├── routes/        # caminhos da API
+│   └── server.js
 ├── frontend/
-│   ├── public/     # Site público
-│   └── admin/      # Painel administrativo
-└── docs/           # Documentação do projeto
+│   ├── public/         # site público (com pasta assets: css, js, img)
+│   └── admin/          # painel administrativo
+├── docs/                # documentação do projeto
+└── docker-compose.yml   # MySQL + phpMyAdmin
 ```
