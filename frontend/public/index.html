@@ -3,15 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRAS Vila São João — Portal de Informações do CRAS</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<title>CRAS Vila São João</title>
 <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
 
-<div class="utility-bar">
+<div class="a11y-bar">
   <div class="container">
     <span class="org">Prefeitura Municipal — Secretaria de Assistência e Desenvolvimento Social</span>
     <div class="a11y-controls">
@@ -19,7 +16,7 @@
       <button class="a11y-btn" id="fontInc" aria-label="Aumentar tamanho da fonte">A+</button>
       <button class="a11y-btn" id="fontReset" aria-label="Tamanho de fonte padrão">A</button>
       <button class="a11y-btn" id="fontDec" aria-label="Diminuir tamanho da fonte">A-</button>
-      <div class="a11y-sep"></div>
+      <span class="a11y-sep">|</span>
       <button class="contrast-btn" id="contrastToggle" aria-pressed="false">Alto Contraste</button>
     </div>
   </div>
@@ -27,76 +24,87 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="#" class="brand">
+    <a class="brand" href="index.html">
       <span class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
       </span>
       <span class="brand-text">
-        <span class="eyebrow">VILA SÃO JOÃO</span>
+        <span class="eyebrow">Vila São João</span>
         <h1>CRAS</h1>
         <span class="sub">Centro de Referência de Assistência Social</span>
       </span>
     </a>
 
-    <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
-      <button class="nav-close" id="navClose" aria-label="Fechar menu">&times;</button>
-      <a href="#inicio" class="active">Início</a>
-      <a href="#servicos">Serviços</a>
-      <a href="#eventos">Eventos</a>
-      <a href="#contato">Contato</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contato" class="btn btn-orange mobile-cta">Ouvidoria / Sugestões</a>
-    </nav>
-    <div class="nav-backdrop" id="navBackdrop"></div>
-
-    <div class="header-actions">
-      <a href="#contato" class="btn btn-orange">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <a href="index.html#inicio" class="active">Início</a>
+      <a href="eventos.html">Eventos</a>
+      <a href="contato.html">Contato</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contato.html" class="btn btn-orange">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
         Ouvidoria / Sugestões
       </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false"><span></span></button>
+    </nav>
+
+    <div class="header-actions">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+        <svg id="iconMenu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        <svg id="iconClose" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
   </div>
+
+  <nav class="mobile-nav" id="mobileNav" aria-label="Navegação móvel">
+    <a href="index.html#inicio" class="active">Início</a>
+    <a href="eventos.html">Eventos</a>
+    <a href="contato.html">Contato</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contato.html" class="btn btn-orange">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      Ouvidoria / Sugestões
+    </a>
+  </nav>
 </header>
 
 <section class="hero" id="inicio">
-  <img class="hero-photo" src="https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop" alt="" aria-hidden="true">
-  <div class="container hero-inner">
-    <span class="badge">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb27a" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-      Assistência Social 100% Gratuita
-    </span>
-    <h2>Bem-vindo ao<br><span class="accent">CRAS Vila São João</span></h2>
-    <p class="lead">Estamos aqui para ajudar sua família a ter acesso a programas sociais, benefícios e serviços gratuitos. Venha nos visitar — nossa equipe está pronta para te atender.</p>
-    <div class="hero-ctas">
-      <a href="#servicos" class="btn btn-orange">
-        Conheça nossos serviços
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
-      </a>
-      <a href="#contato" class="btn btn-outline-light">Ver locais e horários</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><strong>Gratuito</strong><span>Atendimento 100% grátis</span></div>
-      <div class="stat"><strong>4 Serviços</strong><span>Programas disponíveis</span></div>
-      <div class="stat"><strong>Seg–Sex</strong><span>7h15–11h15 e 13h15–17h15</span></div>
+  <img class="hero-bg" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1440&h=560&fit=crop&auto=format" alt="Família brasileira sorrindo, representando assistência social">
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <span class="badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Assistência Social 100% Gratuita
+      </span>
+      <h2>Bem-vindo ao<br><span class="accent">CRAS Vila São João</span></h2>
+      <p class="lead">Estamos aqui para ajudar sua família a ter acesso a programas sociais, benefícios e serviços gratuitos. Venha nos visitar — nossa equipe está pronta para te atender.</p>
+      <div class="hero-ctas">
+        <a href="#servicos" class="btn btn-orange">
+          Conheça nossos serviços
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </a>
+        <a href="contato.html" class="btn btn-outline-light">Ver locais e horários</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><strong>Gratuito</strong><span>Atendimento 100% grátis</span></div>
+        <div class="stat"><strong>4 Serviços</strong><span>Programas disponíveis</span></div>
+        <div class="stat"><strong>Seg–Sex</strong><span>7h15–11h15 e 13h15–17h15</span></div>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="alert-wrap">
+<div class="aviso-wrap">
   <div class="container">
-    <div class="alert" role="status">
-      <span class="alert-icon">
+    <div class="aviso-box" role="status">
+      <span class="aviso-icon">
         <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5-2 6-2 7h18c0-1-2-2-2-7a7 7 0 00-7-7zM9.5 19a2.5 2.5 0 005 0h-5z"/></svg>
       </span>
-      <div class="alert-body">
-        <div class="alert-top">
-          <span class="alert-kicker">AVISO IMPORTANTE</span>
-          <span class="alert-date">01/09/2026</span>
-        </div>
+      <div class="aviso-body">
+        <p class="aviso-kicker">Aviso Importante</p>
         <h3>Sistema CadÚnico em Manutenção</h3>
         <p>O sistema estará em manutenção entre 01 e 05 de setembro. Agendamentos nesse período serão remarcados. Ligue: (63) 99961-8630.</p>
       </div>
+      <span class="aviso-date">01/09/2026</span>
     </div>
   </div>
 </div>
@@ -104,195 +112,246 @@
 <section id="servicos">
   <div class="container">
     <div class="section-head">
-      <span class="kicker">NOSSOS SERVIÇOS</span>
-      <h2>Programas do CRAS Vila São João</h2>
-      <p>Toque em cada programa para ver os documentos que você precisa levar.</p>
+      <span class="kicker">Nossos Serviços</span>
+      <h2>O que o CRAS oferece para você</h2>
+      <p>Atendimento humanizado e gratuito para famílias em situação de vulnerabilidade social ou risco pessoal.</p>
     </div>
 
     <div class="services-grid">
 
       <article class="service-card">
-        <div class="service-top">
-          <span class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
-          <div class="service-title">
-            <h3>Cadastro Único</h3>
-            <p>Porta de entrada para benefícios e programas sociais do governo.</p>
+        <div class="service-topbar" style="background:#1B3A6B"></div>
+        <div class="service-body">
+          <div class="service-head-row">
+            <span class="service-emoji">📋</span>
+            <span class="service-tag" style="background:rgba(27,58,107,.09); color:#1B3A6B">Benefício Federal</span>
           </div>
-        </div>
-        <button class="docs-toggle" aria-expanded="false" aria-controls="docs-cadunico">
-          Documentos necessários
-          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="docs-panel" id="docs-cadunico">
-          <ul>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Certidão de nascimento</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>RG, CPF, título de eleitor e carteira de trabalho</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Comprovante de endereço</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Declaração escolar</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Declaração de vacinação</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Comprovante de renda</li>
+          <h3 style="color:#1B3A6B">Cadastro Único</h3>
+          <p class="service-subtitle">CadÚnico / Programa Federal</p>
+          <p class="service-desc">Registro obrigatório para acessar programas sociais do Governo Federal. Famílias de baixa renda devem manter o cadastro sempre atualizado.</p>
+          <ul class="service-items" style="color:#1B3A6B">
+            <li><svg viewBox="0 0 24 24" fill="#1B3A6B"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Bolsa Família</li>
+            <li><svg viewBox="0 0 24 24" fill="#1B3A6B"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>BPC / LOAS</li>
+            <li><svg viewBox="0 0 24 24" fill="#1B3A6B"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Tarifa Social de Energia</li>
+            <li><svg viewBox="0 0 24 24" fill="#1B3A6B"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Carteira do Idoso</li>
           </ul>
+          <a href="servico.html?id=cadastro" class="service-link" style="--c:#1B3A6B">
+            Saiba mais
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </a>
         </div>
-      </article>
+        </article>
 
       <article class="service-card">
-        <div class="service-top">
-          <span class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.5 8 2.5 4 6.5 4c2 0 3.5 1 5.5 3 2-2 3.5-3 5.5-3 4 0 6 4 4 8-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
-          <div class="service-title">
-            <h3>PAIF</h3>
-            <p>Proteção e Atenção Integral à Família — acompanhamento e apoio.</p>
+        <div class="service-topbar" style="background:#E8600A"></div>
+        <div class="service-body">
+          <div class="service-head-row">
+            <span class="service-emoji">🤝</span>
+            <span class="service-tag" style="background:rgba(232,96,10,.09); color:#E8600A">Serviço SUAS</span>
           </div>
-        </div>
-        <button class="docs-toggle" aria-expanded="false" aria-controls="docs-paif">
-          Documentos necessários
-          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="docs-panel" id="docs-paif">
-          <ul>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Certidão de nascimento</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>RG, CPF e título de eleitor</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Comprovante de endereço</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Número do NIS</li>
+          <h3 style="color:#E8600A">PAIF</h3>
+          <p class="service-subtitle">Proteção e Atenção Integral à Família</p>
+          <p class="service-desc">Acompanhamento continuado de famílias para fortalecer vínculos, prevenir rupturas e garantir acesso a direitos.</p>
+          <ul class="service-items" style="color:#E8600A">
+            <li><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Visitas domiciliares</li>
+            <li><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Grupos socioeducativos</li>
+            <li><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Encaminhamentos à rede</li>
+            <li><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Acompanhamento familiar</li>
           </ul>
+          <a href="servico.html?id=paif" class="service-link" style="--c:#E8600A">
+            Saiba mais
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </a>
         </div>
-      </article>
+        </article>
 
       <article class="service-card">
-        <div class="service-top">
-          <span class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg></span>
-          <div class="service-title">
-            <h3>Criança Feliz</h3>
-            <p>Visitas e orientação para o desenvolvimento infantil na primeira infância.</p>
+        <div class="service-topbar" style="background:#2A7D4F"></div>
+        <div class="service-body">
+          <div class="service-head-row">
+            <span class="service-emoji">👥</span>
+            <span class="service-tag" style="background:rgba(42,125,79,.09); color:#2A7D4F">Serviço SUAS</span>
           </div>
-        </div>
-        <button class="docs-toggle" aria-expanded="false" aria-controls="docs-crianca">
-          Documentos necessários
-          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="docs-panel" id="docs-crianca">
-          <ul>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>CPF</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Comprovante de Cadastro Único</li>
+          <h3 style="color:#2A7D4F">SCFV</h3>
+          <p class="service-subtitle">Convivência e Fortalecimento de Vínculos</p>
+          <p class="service-desc">Atividades em grupo para crianças, adolescentes e idosos com foco no desenvolvimento de habilidades para a vida.</p>
+          <ul class="service-items" style="color:#2A7D4F">
+            <li><svg viewBox="0 0 24 24" fill="#2A7D4F"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Crianças de 6 a 15 anos</li>
+            <li><svg viewBox="0 0 24 24" fill="#2A7D4F"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Jovens de 15 a 17 anos</li>
+            <li><svg viewBox="0 0 24 24" fill="#2A7D4F"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Idosos com 60+ anos</li>
+            <li><svg viewBox="0 0 24 24" fill="#2A7D4F"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Oficinas e atividades lúdicas</li>
           </ul>
+          <a href="servico.html?id=scfv" class="service-link" style="--c:#2A7D4F">
+            Saiba mais
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </a>
         </div>
-      </article>
+        </article>
 
       <article class="service-card">
-        <div class="service-top">
-          <span class="service-icon"><svg viewBox="0 0 24 24"><path d="M17 20v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M9 10a4 4 0 100-8 4 4 0 000 8zM23 20v-2a4 4 0 00-3-3.87M16 4.13a4 4 0 010 7.75"/></svg></span>
-          <div class="service-title">
-            <h3>Serviço de Convivência</h3>
-            <p>Atividades em grupo que fortalecem vínculos e a convivência comunitária.</p>
+        <div class="service-topbar" style="background:#7B3FA0"></div>
+        <div class="service-body">
+          <div class="service-head-row">
+            <span class="service-emoji">👶</span>
+            <span class="service-tag" style="background:rgba(123,63,160,.09); color:#7B3FA0">Programa Federal</span>
           </div>
-        </div>
-        <button class="docs-toggle" aria-expanded="false" aria-controls="docs-scfv">
-          Documentos necessários
-          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="docs-panel" id="docs-scfv">
-          <ul>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Comprovante de endereço</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.4-1.4z"/></svg>Documento de identidade</li>
+          <h3 style="color:#7B3FA0">Criança Feliz</h3>
+          <p class="service-subtitle">Programa Nacional Criança Feliz</p>
+          <p class="service-desc">Visitas domiciliares a famílias com crianças de até 3 anos beneficiárias do Bolsa Família, apoiando o desenvolvimento infantil.</p>
+          <ul class="service-items" style="color:#7B3FA0">
+            <li><svg viewBox="0 0 24 24" fill="#7B3FA0"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Crianças de 0 a 3 anos</li>
+            <li><svg viewBox="0 0 24 24" fill="#7B3FA0"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Gestantes beneficiárias</li>
+            <li><svg viewBox="0 0 24 24" fill="#7B3FA0"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Visitas domiciliares</li>
+            <li><svg viewBox="0 0 24 24" fill="#7B3FA0"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.4L6.4 12l1.4-1.4 2.9 2.9 6-6L18.1 9l-7.3 7.4z"/></svg>Estímulo ao desenvolvimento</li>
           </ul>
+          <a href="servico.html?id=crianca" class="service-link" style="--c:#7B3FA0">
+            Saiba mais
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </a>
         </div>
-      </article>
+        </article>
 
     </div>
   </div>
 </section>
 
-<section id="eventos" style="background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+<section id="eventos">
   <div class="container">
-    <div class="section-head">
-      <span class="kicker">PRÓXIMOS EVENTOS</span>
-      <h2>Fique por dentro do que vem por aí</h2>
-      <p>Confira as próximas atividades e mutirões no CRAS Vila São João.</p>
+    <div class="events-head">
+      <div>
+        <span class="kicker">Agenda</span>
+        <h2>Próximos Eventos</h2>
+      </div>
+      <a href="eventos.html" class="events-head-link">
+        Ver todos os eventos
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </a>
     </div>
 
     <div class="events-list">
       <div class="event-card">
-        <div class="event-date"><span class="day">08</span><span class="mon">SET</span></div>
+        <div class="event-date" style="background:#1B3A6B"><span class="day">05</span><span class="mon">Set</span></div>
         <div class="event-info">
-          <h3>Mutirão de atualização do Cadastro Único</h3>
-          <div class="event-tags">
-            <span><svg viewBox="0 0 24 24"><path d="M12 7v5l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>8h às 12h</span>
-            <span><svg viewBox="0 0 24 24"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>CRAS Vila São João</span>
+          <span class="event-category" style="background:#1B3A6B">Atendimento</span>
+          <h3>Mutirão de Cadastro Único</h3>
+          <div class="event-meta">
+            <span><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5v5.4l4 2.3-.9 1.5-4.85-2.8V7h1.75z"/></svg>08h00 às 12h00</span>
+            <span><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>CRAS Vila São João</span>
           </div>
+          <p class="event-desc">Atendimento especial para atualização e inclusão no Cadastro Único. Traga todos os documentos originais da família. Atendimento por ordem de chegada.</p>
         </div>
-        <a href="#contato" class="btn btn-ghost-navy">Mais detalhes</a>
       </div>
 
       <div class="event-card">
-        <div class="event-date"><span class="day">15</span><span class="mon">SET</span></div>
+        <div class="event-date" style="background:#2A7D4F"><span class="day">10</span><span class="mon">Set</span></div>
         <div class="event-info">
-          <h3>Roda de conversa: direitos da pessoa idosa</h3>
-          <div class="event-tags">
-            <span><svg viewBox="0 0 24 24"><path d="M12 7v5l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>14h às 16h</span>
-            <span><svg viewBox="0 0 24 24"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>Salão comunitário</span>
+          <span class="event-category" style="background:#2A7D4F">Oficina</span>
+          <h3>Oficina de Empreendedorismo Feminino</h3>
+          <div class="event-meta">
+            <span><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5v5.4l4 2.3-.9 1.5-4.85-2.8V7h1.75z"/></svg>14h00 às 16h00</span>
+            <span><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>Salão Comunitário — Rua Araguaia</span>
           </div>
+          <p class="event-desc">Curso gratuito de empreendedorismo para mulheres em situação de vulnerabilidade social. Vagas limitadas — inscrições no CRAS até 08/09.</p>
         </div>
-        <a href="#contato" class="btn btn-ghost-navy">Mais detalhes</a>
       </div>
 
       <div class="event-card">
-        <div class="event-date"><span class="day">22</span><span class="mon">SET</span></div>
+        <div class="event-date" style="background:#059669"><span class="day">18</span><span class="mon">Set</span></div>
         <div class="event-info">
-          <h3>Entrega de encaminhamentos do Criança Feliz</h3>
-          <div class="event-tags">
-            <span><svg viewBox="0 0 24 24"><path d="M12 7v5l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>9h às 11h</span>
-            <span><svg viewBox="0 0 24 24"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>CRAS Vila São João</span>
+          <span class="event-category" style="background:#059669">Saúde</span>
+          <h3>Vacinação e Orientação de Saúde</h3>
+          <div class="event-meta">
+            <span><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5v5.4l4 2.3-.9 1.5-4.85-2.8V7h1.75z"/></svg>09h00 às 11h00</span>
+            <span><svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>CRAS Vila São João</span>
           </div>
+          <p class="event-desc">Em parceria com a UBS, o CRAS realiza mutirão de vacinação e orientação sobre programas de rastreamento de saúde para a comunidade.</p>
         </div>
-        <a href="#contato" class="btn btn-ghost-navy">Mais detalhes</a>
       </div>
+    </div>
+
+    <div class="events-cta">
+      <a href="eventos.html" class="btn btn-navy">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Ver agenda completa
+      </a>
     </div>
   </div>
 </section>
 
 <footer id="contato">
-  <div class="container">
+  <div class="container footer-top">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">
-          <span class="brand-mark">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="#fff" stroke-width="1.6"/></svg>
+        <div class="footer-brand-row">
+          <span class="footer-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
           </span>
           <div>
             <h2>CRAS Vila São João</h2>
-            <p>Portal de Informações do CRAS</p>
+            <span class="tag">Assistência Social Gratuita</span>
           </div>
         </div>
-        <p style="max-width:320px;">Assistência social gratuita para famílias da comunidade Vila São João e região.</p>
-      </div>
-
-      <div class="col">
-        <h4>Contato</h4>
-        <div class="contact-line">
-          <svg viewBox="0 0 24 24"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>
-          <p>Rua Araguaia, nº 839<br>Vila São João</p>
-        </div>
-        <div class="contact-line">
-          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.3 21 3 13.7 3 4.9c0-.5.4-.9 1-.9h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
-          <a href="tel:+5563999618630">(63) 99961-8630</a>
+        <p class="footer-desc">O CRAS é a porta de entrada da Proteção Social Básica do SUAS — Sistema Único de Assistência Social. Todos os serviços são gratuitos.</p>
+        <div class="socials">
+          <a href="#" class="social-btn" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 9H15V6.5h-1.8C11 6.5 10 7.7 10 9.8V11H8.5v2.5H10V21h2.7v-7.5H14.6L15 11h-2.3V9.9c0-.6.2-.9.8-.9z"/></svg></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+          <a href="#" class="social-btn" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22 12s0-3.2-.4-4.7c-.2-.9-.9-1.6-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.5c-.9.2-1.6.9-1.8 1.8C2 8.8 2 12 2 12s0 3.2.4 4.7c.2.9.9 1.6 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.5c.9-.2 1.6-.9 1.8-1.8.4-1.5.4-4.7.4-4.7zM10 15V9l5.2 3-5.2 3z"/></svg></a>
         </div>
       </div>
 
       <div class="col">
-        <h4>Horário de Funcionamento</h4>
-        <p>Segunda a sexta-feira</p>
-        <p>07h15 às 11h15</p>
-        <p>13h15 às 17h15</p>
+        <h4>Contato e Endereço</h4>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z"/></svg>
+          <p>Rua Araguaia, 839<br>Vila São João</p>
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="#E8600A"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.3 21 3 13.7 3 4.9c0-.5.4-.9 1-.9h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+          <p style="font-weight:700">(63) 99961-8630</p>
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="#E8600A"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5v5.4l4 2.3-.9 1.5-4.85-2.8V7h1.75z"/></svg>
+          <div>
+            <p class="strong-line">Segunda a Sexta-feira</p>
+            <p>Manhã: 7h15 às 11h15</p>
+            <p>Tarde: 13h15 às 17h15</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <h4>Acesso Rápido</h4>
+        <div class="quick-links">
+          <a href="index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            Início
+          </a>
+          <a href="eventos.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            Próximos Eventos
+          </a>
+          <a href="contato.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            Contato e Ouvidoria
+          </a>
+          <a href="faq.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            Perguntas Frequentes
+          </a>
+          <a href="admin-login.html" class="admin-link">Área Administrativa</a>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="footer-bottom">
-      <span>© 2026 Prefeitura Municipal — Secretaria de Assistência e Desenvolvimento Social</span>
-      <span>CRAS Vila São João</span>
+  <div class="footer-bottom-wrap">
+    <div class="container footer-bottom">
+      <p>© 2026 CRAS Vila São João — Prefeitura Municipal. Todos os direitos reservados.</p>
+      <p>Atendimento 100% gratuito — SUAS / Proteção Social Básica</p>
     </div>
   </div>
 </footer>
 
 <script src="./assets/js/script.js"></script>
-
 </body>
 </html>
