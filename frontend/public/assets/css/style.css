@@ -380,7 +380,16 @@ section{padding:70px 0;}
 .service-topbar{height:6px; width:100%;}
 .service-body{padding:24px; display:flex; flex-direction:column; flex:1;}
 .service-head-row{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:14px;}
-.service-emoji{font-size:2.2rem; line-height:1;}
+.service-icon{
+  width: 48px;
+  height: 48px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.service-icon svg{width:24px; height:24px;}
 .service-tag{
   font-size:.68rem;
   font-weight:900;
