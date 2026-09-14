@@ -1,8 +1,8 @@
 // ============================================================
-// SCRIPT COMPARTILHADO — usado por todas as páginas do site
-// (menu mobile e recursos de acessibilidade: tamanho de fonte
-// e alto contraste). Qualquer página que use o mesmo cabeçalho
-// e barra de acessibilidade deve incluir este arquivo.
+// SCRIPT DA PÁGINA DE EVENTOS — arquivo próprio e independente
+//  Contém: menu mobile,
+// acessibilidade (fonte e alto contraste) e o filtro de eventos
+// por mês, que é exclusivo desta página.
 // ============================================================
 
 // ---------- Menu mobile (aparece abaixo do cabeçalho em telas pequenas) ----------
@@ -80,3 +80,40 @@ contrastBtn.addEventListener('click', () => {
   const on = document.body.classList.toggle('contrast');
   contrastBtn.setAttribute('aria-pressed', String(on));
 });
+
+// ---------- Página de Eventos: filtro por mês ----------
+// Pega todos os botões de filtro ("Todos os Meses", "Setembro", "Outubro")
+// e todos os cards de evento da lista, além da mensagem de "lista vazia".
+const monthFilters = document.querySelectorAll('.month-filter');
+const eventCards = document.querySelectorAll('#eventsList .event-card');
+const eventsEmpty = document.getElementById('eventsEmpty');
+
+// Só ativa o filtro se os elementos realmente existirem na página
+// (evita erro caso este script seja carregado em outra tela por engano)
+if (monthFilters.length && eventCards.length) {
+  monthFilters.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove o estado "ativo" de todos os botões de filtro...
+      monthFilters.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      // ...e marca como ativo só o botão que foi clicado
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      // Cada card de evento tem um atributo data-month (ex: "09" ou "10").
+      // "todos" mostra tudo; qualquer outro valor mostra só os que baterem.
+      const month = btn.getAttribute('data-month');
+      let visibleCount = 0;
+      eventCards.forEach(card => {
+        const match = month === 'todos' || card.getAttribute('data-month') === month;
+        card.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      // Se nenhum evento bateu com o filtro, mostra a mensagem de "vazio"
+      if (eventsEmpty) eventsEmpty.hidden = visibleCount > 0;
+    });
+  });
+}
