@@ -795,6 +795,39 @@ body.contrast .admin-link{color:#fff;}
 body.contrast .footer-bottom-wrap{border-top:2px solid #fff;}
 body.contrast .footer-bottom{color:#fff;}
 
+/* Página de Contato: cartões de informação, WhatsApp, mapa e formulário */
+body.contrast .contato-section{background:#000;}
+body.contrast .info-card,
+body.contrast .mini-info-card,
+body.contrast .map-placeholder,
+body.contrast .contact-form-card{background:#000; border:2px solid #fff;}
+body.contrast .info-card-label,
+body.contrast .info-card-value,
+body.contrast .info-card p{color:#fff;}
+body.contrast .info-card-icon{background:var(--accent);}
+body.contrast .info-card-icon svg{stroke:#000;}
+body.contrast .whatsapp-card{background:#000; border:2px solid #25D366;}
+body.contrast .whatsapp-card strong,
+body.contrast .whatsapp-card p{color:#fff;}
+body.contrast .mini-info-title{color:#fff;}
+body.contrast .mini-info-title svg{fill:var(--accent) !important;}
+body.contrast .mini-info-card p,
+body.contrast .mini-info-note{color:#fff;}
+body.contrast .mini-info-link{color:var(--accent);}
+body.contrast .map-placeholder p{color:#fff;}
+body.contrast .map-placeholder svg{fill:var(--accent) !important;}
+body.contrast .form-card-head h2,
+body.contrast .form-card-head p{color:#fff;}
+body.contrast .form-card-icon{background:var(--accent);}
+body.contrast .form-field label{color:#fff;}
+body.contrast .form-field input,
+body.contrast .form-field select,
+body.contrast .form-field textarea{background:#000; color:#fff; border:2px solid #fff;}
+body.contrast .form-footnote{color:#fff;}
+body.contrast .form-success{background:#000; border:2px solid var(--accent);}
+body.contrast .form-success strong,
+body.contrast .form-success p{color:#fff;}
+body.contrast .field-error{color:#ff6b6b;}
 
 /* ---------- Responsividade (ajustes para tablet e celular) ---------- */
 @media (max-width:1279px){
@@ -833,4 +866,226 @@ body.contrast .footer-bottom{color:#fff;}
   .a11y-btn{width:28px; height:28px; font-size:.75rem;}
   .contrast-btn{height:28px; padding:0 9px; font-size:.75rem;}
   .hero h2{font-size:1.7rem;}
+}
+
+/* ============================================================
+   PÁGINA DE CONTATO — estilos próprios (não usados nas outras páginas)
+   ============================================================ */
+
+.contato-section{padding:8px 0 70px; background:var(--card);}
+.contato-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  align-items:start;
+}
+
+/* ---------- Coluna esquerda: cartões de informação ---------- */
+.contato-info{display:flex; flex-direction:column; gap:20px;}
+
+.info-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px;
+}
+.info-card-label{
+  display:block;
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted-foreground);
+  margin-bottom:12px;
+}
+.info-card-main{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:12px;
+}
+.info-card-icon{
+  width:44px; height:44px;
+  border-radius:12px;
+  background:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.info-card-icon svg{width:20px; height:20px;}
+.info-card-value{font-size:1.3rem; font-weight:900; color:var(--primary);}
+.info-card p{margin:0; color:var(--muted-foreground); font-size:.98rem; line-height:1.55;}
+
+/* Cartão de WhatsApp: o link inteiro é clicável */
+.whatsapp-card{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  background:#ECFDF5;
+  border:1px solid #A7F3D0;
+  border-radius:18px;
+  padding:22px;
+  text-decoration:none;
+  transition:box-shadow .15s ease;
+}
+.whatsapp-card:hover{box-shadow:0 10px 22px -14px rgba(16,185,129,.5);}
+.whatsapp-icon{
+  width:44px; height:44px;
+  border-radius:12px;
+  background:#25D366;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.whatsapp-icon svg{width:22px; height:22px;}
+.whatsapp-card strong{display:block; color:#065F46; font-size:1.05rem; margin-bottom:4px;}
+.whatsapp-card p{margin:0; color:#0d7a5f; font-size:.95rem; line-height:1.5;}
+
+/* Endereço + Horário lado a lado */
+.mini-info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.mini-info-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+}
+.mini-info-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:900;
+  color:var(--primary);
+  font-size:1rem;
+  margin-bottom:10px;
+}
+.mini-info-title svg{width:18px; height:18px; flex-shrink:0;}
+.mini-info-card p{margin:0 0 8px; color:var(--muted-foreground); font-size:.94rem; line-height:1.5;}
+.mini-info-note{display:block; color:var(--muted-foreground); font-size:.86rem; font-style:italic;}
+.mini-info-link{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:var(--accent);
+  font-weight:700;
+  font-size:.92rem;
+}
+.mini-info-link:hover{text-decoration:underline;}
+.mini-info-link svg{width:14px; height:14px;}
+
+/* Placeholder do mapa (link para o Google Maps) */
+.map-placeholder{
+  background:var(--secondary);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:36px 24px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+.map-placeholder p{margin:0 0 6px; color:var(--muted-foreground); font-weight:600;}
+
+/* ---------- Coluna direita: formulário de Ouvidoria ---------- */
+.contact-form-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:28px;
+}
+.form-card-head{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:22px;
+}
+.form-card-icon{
+  width:44px; height:44px;
+  border-radius:12px;
+  background:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.form-card-icon svg{width:20px; height:20px;}
+.form-card-head h2{font-size:1.2rem; font-weight:900; color:var(--primary); margin-bottom:2px;}
+.form-card-head p{margin:0; color:var(--muted-foreground); font-size:.94rem;}
+
+.form-field{margin-bottom:18px;}
+.form-field label{
+  display:block;
+  font-weight:700;
+  font-size:.96rem;
+  color:var(--foreground);
+  margin-bottom:8px;
+}
+.form-field .required{color:#DC2626;}
+.form-field input,
+.form-field select,
+.form-field textarea{
+  width:100%;
+  background:var(--input-background);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:13px 14px;
+  font-family:inherit;
+  font-size:1rem;
+  color:var(--foreground);
+}
+.form-field textarea{resize:vertical; min-height:110px;}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus{
+  outline:2px solid var(--accent);
+  outline-offset:1px;
+}
+
+/* Estado de erro: aparece só depois que o campo foi validado e falhou */
+.field-error{
+  display:none;
+  color:#DC2626;
+  font-size:.86rem;
+  font-weight:600;
+  margin-top:6px;
+}
+.form-field.invalid input,
+.form-field.invalid select,
+.form-field.invalid textarea{
+  border-color:#DC2626;
+  background:#FEF2F2;
+}
+.form-field.invalid .field-error{display:block;}
+
+.btn-block{width:100%; margin-top:4px;}
+.form-footnote{
+  margin:14px 0 0;
+  text-align:center;
+  color:var(--muted-foreground);
+  font-size:.85rem;
+  line-height:1.5;
+}
+
+/* Mensagem de sucesso após o envio */
+.form-success{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  background:#ECFDF5;
+  border:1px solid #A7F3D0;
+  border-radius:14px;
+  padding:16px 18px;
+  margin-bottom:20px;
+}
+.form-success svg{width:22px; height:22px; flex-shrink:0; margin-top:2px;}
+.form-success strong{display:block; color:#065F46; margin-bottom:2px;}
+.form-success p{margin:0; color:#0d7a5f; font-size:.92rem;}
+
+/* ---------- Responsividade da página de Contato ---------- */
+@media (max-width:900px){
+  .contato-grid{grid-template-columns:1fr;}
+}
+@media (max-width:560px){
+  .mini-info-grid{grid-template-columns:1fr;}
+  .contact-form-card, .info-card, .whatsapp-card, .map-placeholder{padding:20px;}
 }
