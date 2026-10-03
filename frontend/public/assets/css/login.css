@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   FOLHA DE ESTILOS — TELA DE LOGIN (Área Administrativa)
+   Arquivo próprio e independente: não depende de style.css,
+   eventos.css nem contato.css. Usa só o que esta página precisa:
+   barra de acessibilidade, o card de login e o modo alto contraste.
+   ============================================================ */
+
+:root{
+  --background:#F0F4F8;
+  --foreground:#1A2534;
+  --card:#ffffff;
+  --primary:#1B3A6B;      /* azul-marinho (cor principal) */
+  --muted-foreground:#556880;
+  --accent:#E8600A;       /* laranja (cor de destaque/ação) */
+  --border:rgba(26,37,52,0.12);
+  --input-background:#EAF0F8;
+}
+
+*{box-sizing:border-box; min-width:0;}
+html{
+  scroll-behavior:smooth;
+  font-size:18px; /* base para todo o "rem" do site; os botões A+/A/A- mudam este valor */
+}
+html,body{overflow-x:hidden; width:100%;}
+body{
+  margin:0;
+  font-family:'Nunito', system-ui, sans-serif;
+  color:var(--foreground);
+  background:var(--background);
+  font-size:1rem;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer;}
+h1{margin:0;}
+svg{display:block;}
+
+/* Garante que o atributo HTML "hidden" sempre vença qualquer regra de
+   CSS que defina display em um elemento (ex.: .login-error{display:flex}) */
+[hidden]{display:none !important;}
+
+.container{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 clamp(16px, 4vw, 24px);
+  width:100%;
+}
+
+/* ---------- Barra de acessibilidade ---------- */
+.a11y-bar{background:var(--primary); color:rgba(255,255,255,.7);}
+.a11y-bar .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding-top:8px;
+  padding-bottom:8px;
+  flex-wrap:wrap;
+  font-size:.85rem;
+}
+.a11y-bar .org{font-weight:500;}
+.a11y-controls{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.a11y-controls .label{color:rgba(255,255,255,.55); margin-right:2px;}
+.a11y-btn{
+  width:32px; height:32px;
+  border-radius:8px;
+  background:rgba(255,255,255,.15);
+  border:none;
+  color:#fff;
+  font-weight:800;
+  font-size:.85rem;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:background .15s ease;
+}
+.a11y-btn:hover{background:rgba(255,255,255,.25);}
+.a11y-sep{opacity:.3; padding:0 2px;}
+.contrast-btn{
+  height:32px; padding:0 12px;
+  border-radius:8px;
+  background:rgba(255,255,255,.15);
+  border:none;
+  color:#fff;
+  font-weight:700;
+  font-size:.82rem;
+  transition:background .15s ease;
+}
+.contrast-btn:hover{background:rgba(255,255,255,.25);}
+.contrast-btn[aria-pressed="true"]{background:#fff; color:var(--primary);}
+
+/* ---------- Botões ---------- */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border-radius:12px;
+  font-weight:800;
+  border:2px solid transparent;
+  white-space:nowrap;
+  transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
+}
+.btn:active{transform:translateY(1px);}
+.btn-navy{background:var(--primary); color:#fff; padding:15px 26px; font-size:1.05rem;}
+.btn-navy:hover{background:#152e56;}
+.btn-block{width:100%;}
+
+/* ---------- Tela de login ---------- */
+.login-wrap{
+  min-height:calc(100vh - 54px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:56px 20px;
+}
+.login-box{width:100%; max-width:440px; text-align:center;}
+.login-logo{
+  width:64px; height:64px;
+  margin:0 auto 20px;
+  border-radius:18px;
+  background:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+}
+.login-logo svg{width:30px; height:30px;}
+.login-box h1{font-size:1.6rem; font-weight:900; color:var(--primary); margin-bottom:6px;}
+.login-sub{margin:0 0 28px; color:var(--muted-foreground); font-size:1rem;}
+
+.login-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:28px;
+  text-align:left;
+  box-shadow:0 20px 40px -24px rgba(26,37,52,.25);
+}
+
+.login-error{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#FEF2F2;
+  border:1px solid #FCA5A5;
+  border-radius:12px;
+  padding:12px 14px;
+  margin-bottom:18px;
+}
+.login-error svg{width:20px; height:20px; flex-shrink:0;}
+.login-error span{color:#B91C1C; font-size:.94rem; font-weight:600;}
+
+.form-field{margin-bottom:18px;}
+.form-field label{
+  display:block;
+  font-weight:700;
+  font-size:.96rem;
+  color:var(--foreground);
+  margin-bottom:8px;
+}
+.input-with-icon{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--input-background);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:0 14px;
+}
+.input-with-icon svg{width:20px; height:20px; color:var(--muted-foreground); flex-shrink:0;}
+.input-with-icon input{
+  flex:1;
+  min-width:0;
+  border:none;
+  background:none;
+  padding:13px 0;
+  font-family:inherit;
+  font-size:1rem;
+  color:var(--foreground);
+}
+.input-with-icon input:focus{outline:none;}
+.input-with-icon:focus-within{outline:2px solid var(--accent); outline-offset:1px;}
+.toggle-password{
+  background:none;
+  border:none;
+  padding:4px;
+  display:flex;
+  color:var(--muted-foreground);
+  flex-shrink:0;
+}
+.toggle-password svg{width:20px; height:20px;}
+
+.field-error{
+  display:none;
+  color:#DC2626;
+  font-size:.86rem;
+  font-weight:600;
+  margin-top:6px;
+}
+.form-field.invalid .input-with-icon{border-color:#DC2626; background:#FEF2F2;}
+.form-field.invalid .field-error{display:block;}
+
+.login-demo{
+  margin:0 0 20px;
+  font-size:.86rem;
+  color:var(--muted-foreground);
+  text-align:center;
+}
+.login-demo strong{color:var(--foreground);}
+
+/* ---------- Responsividade ---------- */
+@media (max-width:480px){
+  .login-card{padding:22px;}
+  .login-wrap{padding:40px 16px;}
+}
+
+/* ---------- Modo Alto Contraste ---------- */
+body.contrast{
+  --background:#000000;
+  --foreground:#ffffff;
+  --card:#000000;
+  --primary:#000000;
+  --muted-foreground:#ffffff;
+  --accent:#ffc400;
+  --border:#ffffff;
+  --input-background:#000000;
+}
+body.contrast .a11y-bar{background:#000; border-bottom:2px solid #fff;}
+body.contrast .login-logo{background:#000; border:2px solid #fff;}
+body.contrast .login-box h1{color:#fff;}
+body.contrast .login-sub{color:#fff;}
+body.contrast .login-card{background:#000; border:2px solid #fff;}
+body.contrast .form-field label{color:#fff;}
+body.contrast .input-with-icon{background:#000; border:2px solid #fff;}
+body.contrast .input-with-icon input{color:#fff;}
+body.contrast .input-with-icon svg{color:var(--accent);}
+body.contrast .toggle-password{color:var(--accent);}
+body.contrast .login-demo{color:#fff;}
+body.contrast .login-demo strong{color:var(--accent);}
+body.contrast .btn-navy{background:#000; color:#fff; border:2px solid #fff;}
+body.contrast .login-error{background:#000; border:2px solid #ff6b6b;}
+body.contrast .login-error span{color:#ff6b6b;}

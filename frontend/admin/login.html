@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área Administrativa — CRAS Vila São João</title>
+<link rel="stylesheet" href="/assets/css/login.css">
+</head>
+<body>
+
+<!-- ============================================================
+     BARRA DE ACESSIBILIDADE
+     Botões A+/A/A- (tamanho da fonte) e Alto Contraste.
+     Lógica em public/assets/js/login.js
+     ============================================================ -->
+<div class="a11y-bar">
+  <div class="container">
+    <span class="org">Prefeitura Municipal — Secretaria de Assistência e Desenvolvimento Social</span>
+    <div class="a11y-controls">
+      <span class="label">Acessibilidade:</span>
+      <button class="a11y-btn" id="fontInc" aria-label="Aumentar tamanho da fonte">A+</button>
+      <button class="a11y-btn" id="fontReset" aria-label="Tamanho de fonte padrão">A</button>
+      <button class="a11y-btn" id="fontDec" aria-label="Diminuir tamanho da fonte">A-</button>
+      <span class="a11y-sep">|</span>
+      <button class="contrast-btn" id="contrastToggle" aria-pressed="false">Alto Contraste</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TELA DE LOGIN
+     Sem cabeçalho/rodapé do site público — é uma área separada.
+     Por enquanto a validação é só no front-end (ainda não existe
+     uma rota de login no back-end). Credenciais de demonstração:
+     admin@cras.gov.br / cras2026
+     ============================================================ -->
+<main class="login-wrap">
+  <div class="login-box">
+
+    <div class="login-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <h1>Área Administrativa</h1>
+    <p class="login-sub">CRAS Vila São João — Acesso restrito</p>
+
+    <form class="login-card" id="loginForm" novalidate>
+
+      <!-- Mensagem de erro, aparece só se o e-mail/senha estiverem errados -->
+      <div class="login-error" id="loginError" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>E-mail ou senha incorretos.</span>
+      </div>
+
+      <div class="form-field">
+        <label for="email">E-mail</label>
+        <div class="input-with-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+          <input type="email" id="email" name="email" placeholder="admin@cras.gov.br" autocomplete="username" required>
+        </div>
+        <span class="field-error" id="erro-email">Digite seu e-mail.</span>
+      </div>
+
+      <div class="form-field">
+        <label for="senha">Senha</label>
+        <div class="input-with-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+          <input type="password" id="senha" name="senha" placeholder="••••••••" autocomplete="current-password" required>
+          <button type="button" class="toggle-password" id="togglePassword" aria-label="Mostrar senha" aria-pressed="false">
+            <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeClosed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.9 17.9A10.9 10.9 0 0112 19c-7 0-11-7-11-7a20.3 20.3 0 015.1-5.7M9.9 4.2A10.4 10.4 0 0112 4c7 0 11 7 11 7a20.4 20.4 0 01-3.2 4.2M14.1 14.1a3 3 0 11-4.2-4.2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <span class="field-error" id="erro-senha">Digite sua senha.</span>
+      </div>
+
+      <p class="login-demo">Demonstração: <strong>admin@cras.gov.br</strong> / <strong>cras2026</strong></p>
+
+      <button type="submit" class="btn btn-navy btn-block" id="loginBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        Entrar
+      </button>
+    </form>
+  </div>
+</main>
+
+<script src="/assets/js/login.js"></script>
+</body>
+</html>
