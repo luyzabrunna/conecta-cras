@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Administrativo — CRAS Vila São João</title>
+<link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+
+<!-- ============================================================
+     BARRA FINA: só o nome do órgão (sem controles de acessibilidade
+     aqui — eles ficam na barra de baixo, junto com a marca).
+     ============================================================ -->
+<div class="admin-topbar">
+  <div class="container">
+    <span>Prefeitura Municipal — Secretaria de Assistência e Desenvolvimento Social</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     CABEÇALHO DO ADMIN: marca à esquerda, acessibilidade à direita.
+     Não tem o menu público (Início/Eventos/Contato/FAQ) — é uma
+     área restrita, separada do site público.
+     ============================================================ -->
+<header class="admin-header">
+  <div class="container admin-header-row">
+    <div class="admin-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+      <span>CRAS Vila São João — Painel Administrativo</span>
+    </div>
+    <div class="a11y-controls">
+      <span class="label">Acessibilidade:</span>
+      <button class="a11y-btn" id="fontInc" aria-label="Aumentar tamanho da fonte">A+</button>
+      <button class="a11y-btn" id="fontReset" aria-label="Tamanho de fonte padrão">A</button>
+      <button class="a11y-btn" id="fontDec" aria-label="Diminuir tamanho da fonte">A-</button>
+      <span class="a11y-sep">|</span>
+      <button class="contrast-btn" id="contrastToggle" aria-pressed="false">Alto Contraste</button>
+    </div>
+  </div>
+</header>
+
+<main class="admin-main">
+  <div class="container">
+
+    <div class="admin-page-head">
+      <div>
+        <span class="kicker">Painel Administrativo</span>
+        <h1>Dashboard — CRAS Vila São João</h1>
+      </div>
+      <button class="btn-logout" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
+    </div>
+
+    <!-- ---------- Cartões de estatística ---------- -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon stat-icon-navy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </span>
+        <strong id="statEventos">0</strong>
+        <span>Eventos ativos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon stat-icon-orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+        </span>
+        <strong id="statAvisos">0</strong>
+        <span>Avisos publicados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon stat-icon-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <strong>4</strong>
+        <span>Serviços oferecidos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon stat-icon-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 115.8 1c0 2-3 2-3 4"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </span>
+        <strong>7</strong>
+        <span>FAQs cadastradas</span>
+      </div>
+    </div>
+
+    <!-- ---------- Eventos + Avisos ---------- -->
+    <div class="panels-grid">
+
+      <section class="panel-card">
+        <div class="panel-head">
+          <h2>Eventos</h2>
+          <button class="btn btn-navy" id="novoEventoBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo Evento
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table class="events-table">
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="eventosTableBody">
+              <!-- As linhas são geradas pelo dashboard.js a partir dos dados salvos -->
+            </tbody>
+          </table>
+          <p class="empty-msg" id="eventosVazio" hidden>Nenhum evento cadastrado ainda.</p>
+        </div>
+      </section>
+
+      <section class="panel-card">
+        <div class="panel-head">
+          <h2>Avisos</h2>
+          <button class="btn btn-orange" id="criarAvisoBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Criar Aviso
+          </button>
+        </div>
+        <div class="avisos-list" id="avisosList">
+          <!-- Os avisos são gerados pelo dashboard.js a partir dos dados salvos -->
+        </div>
+        <p class="empty-msg" id="avisosVazio" hidden>Nenhum aviso publicado ainda.</p>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================
+     MODAL: Novo/Editar Evento
+     ============================================================ -->
+<div class="modal-overlay" id="eventoModalOverlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="eventoModalTitle">
+    <div class="modal-head">
+      <h3 id="eventoModalTitle">Novo Evento</h3>
+      <button class="modal-close" id="eventoModalClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form id="eventoForm" novalidate>
+      <input type="hidden" id="eventoId">
+      <div class="form-field">
+        <label for="eventoNome">Nome do evento <span class="required">*</span></label>
+        <input type="text" id="eventoNome" placeholder="Ex: Mutirão de Cadastro Único" required>
+        <span class="field-error">Digite o nome do evento.</span>
+      </div>
+      <div class="form-field">
+        <label for="eventoData">Data <span class="required">*</span></label>
+        <input type="date" id="eventoData" required>
+        <span class="field-error">Escolha a data do evento.</span>
+      </div>
+      <div class="form-field">
+        <label for="eventoStatus">Status <span class="required">*</span></label>
+        <select id="eventoStatus" required>
+          <option value="Ativo">Ativo</option>
+          <option value="Rascunho">Rascunho</option>
+          <option value="Encerrado">Encerrado</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="eventoDescricao">Descrição (opcional)</label>
+        <textarea id="eventoDescricao" rows="3" placeholder="Detalhes do evento..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="eventoCancelar">Cancelar</button>
+        <button type="submit" class="btn btn-navy">Salvar Evento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: Criar/Editar Aviso
+     ============================================================ -->
+<div class="modal-overlay" id="avisoModalOverlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="avisoModalTitle">
+    <div class="modal-head">
+      <h3 id="avisoModalTitle">Criar Aviso</h3>
+      <button class="modal-close" id="avisoModalClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form id="avisoForm" novalidate>
+      <input type="hidden" id="avisoId">
+      <div class="form-field">
+        <label for="avisoTitulo">Título <span class="required">*</span></label>
+        <input type="text" id="avisoTitulo" placeholder="Ex: Sistema CadÚnico em Manutenção" required>
+        <span class="field-error">Digite o título do aviso.</span>
+      </div>
+      <div class="form-field">
+        <label for="avisoMensagem">Mensagem <span class="required">*</span></label>
+        <textarea id="avisoMensagem" rows="4" placeholder="Escreva o aviso completo..." required></textarea>
+        <span class="field-error">Escreva a mensagem do aviso.</span>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="avisoCancelar">Cancelar</button>
+        <button type="submit" class="btn btn-orange">Salvar Aviso</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/assets/js/dashboard.js"></script>
+</body>
+</html>
