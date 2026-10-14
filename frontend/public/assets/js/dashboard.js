@@ -1,26 +1,26 @@
 // ============================================================
-// SCRIPT DO DASHBOARD (Área Administrativa) 
+// SCRIPT DO DASHBOARD (Área Administrativa)
 // Contém: trava de login, acessibilidade, e o CRUD (criar, editar,
 // apagar) de Eventos e Avisos.
 //
-// IMPORTANTE: como ainda não existe back-end/API para essas telas,
-// os dados são guardados no localStorage do navegador (ou seja,
-// só existem NESTE computador/navegador, não em um banco de dados
-// de verdade). Quando a API existir, troque as funções marcadas
-// com ">>> API <<<" por chamadas fetch().
+// Os dados agora vêm da API e ficam no banco de dados MySQL
+// (antes ficavam no localStorage do navegador). Cada pedido à API
+// leva o token de login no cabeçalho Authorization.
 // ============================================================
 
-// ---------- Trava de login ----------
-// Se a pessoa não passou pela tela de login nesta aba/sessão,
-// manda ela de volta pro login em vez de mostrar o painel.
-if (sessionStorage.getItem('cras_admin_logado') !== 'true') {
+const TOKEN_KEY = 'cras_admin_token';
+
+function sair(){
+  sessionStorage.removeItem(TOKEN_KEY);
   window.location.href = 'login.html';
 }
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  sessionStorage.removeItem('cras_admin_logado');
-  window.location.href = 'login.html';
-});
+// ---------- Trava de login ----------
+// Sem token de sessão, manda a pessoa de volta pro login.
+const logado = !!sessionStorage.getItem(TOKEN_KEY);
+if (!logado) sair();
+
+document.getElementById('logoutBtn').addEventListener('click', sair);
 
 // ---------- Acessibilidade: tamanho da fonte ----------
 const root = document.documentElement;
@@ -39,49 +39,40 @@ contrastBtn.addEventListener('click', () => {
 });
 
 // ============================================================
-// DADOS (guardados no localStorage; dados de exemplo na primeira vez)
+// COMUNICAÇÃO COM A API
 // ============================================================
-const EVENTOS_KEY = 'cras_admin_eventos';
-const AVISOS_KEY = 'cras_admin_avisos';
 
-const eventosExemplo = [
-  { id: 1, nome: 'Mutirão de Cadastro Único', data: '2026-09-05', status: 'Ativo', descricao: '' },
-  { id: 2, nome: 'Oficina de Empreendedorismo Feminino', data: '2026-09-10', status: 'Ativo', descricao: '' },
-  { id: 3, nome: 'Vacinação e Orientação de Saúde', data: '2026-09-18', status: 'Ativo', descricao: '' },
-  { id: 4, nome: 'Semana da Criança', data: '2026-10-07', status: 'Rascunho', descricao: '' },
-];
+// Faz o pedido à API já com o token. Se o token venceu (401), volta pro login.
+async function api(caminho, opcoes = {}){
+  const resposta = await fetch(caminho, {
+    ...opcoes,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + sessionStorage.getItem(TOKEN_KEY),
+    },
+  });
+  if (resposta.status === 401) {
+    sair();
+    throw new Error('Sessão expirada. Entre novamente.');
+  }
+  const dados = resposta.status === 204 ? null : await resposta.json().catch(() => null);
+  if (!resposta.ok) {
+    throw new Error((dados && dados.erro) || 'Erro ao falar com o servidor.');
+  }
+  return dados;
+}
 
-const avisosExemplo = [
-  {
-    id: 1,
-    titulo: 'Sistema CadÚnico em Manutenção',
-    mensagem: 'O sistema estará em manutenção entre 01 e 05 de setembro. Agendamentos nesse período serão remarcados. Ligue: (63) 99961-8630.',
-    data: '2026-09-01',
-  },
-  {
-    id: 2,
-    titulo: 'Novas Vagas no SCFV para Idosos',
-    mensagem: 'Inscrições abertas para o grupo de convivência de idosos. Atividades às terças e quintas, 14h às 16h. Vagas limitadas.',
-    data: '2026-08-28',
-  },
-];
+// Listas em memória, recarregadas da API depois de cada alteração
+let eventos = [];
+let avisos = [];
 
-// >>> API <<<: por enquanto lê/escreve no localStorage. No futuro,
-// troque getEventos()/salvarEventos() (e os de aviso) por chamadas
-// fetch('/api/eventos') / fetch('/api/avisos').
-function getEventos(){
-  const salvo = localStorage.getItem(EVENTOS_KEY);
-  return salvo ? JSON.parse(salvo) : eventosExemplo;
+async function carregarEventos(){
+  eventos = await api('/api/eventos/admin'); // todos: ativos, rascunhos e encerrados
+  renderEventos();
 }
-function salvarEventos(lista){
-  localStorage.setItem(EVENTOS_KEY, JSON.stringify(lista));
-}
-function getAvisos(){
-  const salvo = localStorage.getItem(AVISOS_KEY);
-  return salvo ? JSON.parse(salvo) : avisosExemplo;
-}
-function salvarAvisos(lista){
-  localStorage.setItem(AVISOS_KEY, JSON.stringify(lista));
+async function carregarAvisos(){
+  avisos = await api('/api/avisos');
+  renderAvisos();
 }
 
 // ---------- Formatação de data (yyyy-mm-dd -> dd/mm/aaaa) ----------
@@ -89,6 +80,13 @@ function formatarData(isoDate){
   if (!isoDate) return '';
   const [ano, mes, dia] = isoDate.split('-');
   return `${dia}/${mes}/${ano}`;
+}
+
+// Evita que texto digitado pelo usuário vire HTML sem querer (segurança básica)
+function escapeHtml(texto){
+  const div = document.createElement('div');
+  div.textContent = texto;
+  return div.innerHTML;
 }
 
 // ============================================================
@@ -101,7 +99,6 @@ function statusClasse(status){
 }
 
 function renderEventos(){
-  const eventos = getEventos();
   const tbody = document.getElementById('eventosTableBody');
   const vazio = document.getElementById('eventosVazio');
 
@@ -132,7 +129,6 @@ function renderEventos(){
 }
 
 function renderAvisos(){
-  const avisos = getAvisos();
   const list = document.getElementById('avisosList');
   const vazio = document.getElementById('avisosVazio');
 
@@ -166,13 +162,6 @@ function renderAvisos(){
   document.getElementById('statAvisos').textContent = avisos.length;
 }
 
-// Evita que texto digitado pelo usuário vire HTML sem querer (segurança básica)
-function escapeHtml(texto){
-  const div = document.createElement('div');
-  div.textContent = texto;
-  return div.innerHTML;
-}
-
 // ============================================================
 // MODAL: Novo/Editar Evento
 // ============================================================
@@ -190,6 +179,9 @@ function abrirModalEvento(evento){
     document.getElementById('eventoData').value = evento.data;
     document.getElementById('eventoStatus').value = evento.status;
     document.getElementById('eventoDescricao').value = evento.descricao || '';
+    document.getElementById('eventoCategoria').value = evento.categoria || '';
+    document.getElementById('eventoHorario').value = evento.horario || '';
+    document.getElementById('eventoLocal').value = evento.local || '';
   } else {
     eventoModalTitle.textContent = 'Novo Evento';
     document.getElementById('eventoId').value = '';
@@ -204,7 +196,7 @@ document.getElementById('eventoModalClose').addEventListener('click', fecharModa
 document.getElementById('eventoCancelar').addEventListener('click', fecharModalEvento);
 eventoModalOverlay.addEventListener('click', (e) => { if (e.target === eventoModalOverlay) fecharModalEvento(); });
 
-eventoForm.addEventListener('submit', (e) => {
+eventoForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const nomeField = document.getElementById('eventoNome');
   const dataField = document.getElementById('eventoData');
@@ -215,41 +207,44 @@ eventoForm.addEventListener('submit', (e) => {
   if (!nomeOk || !dataOk) return;
 
   const id = document.getElementById('eventoId').value;
-  const eventos = getEventos();
-  const dadosEvento = {
+  const corpo = JSON.stringify({
     nome: nomeField.value.trim(),
     data: dataField.value,
     status: document.getElementById('eventoStatus').value,
     descricao: document.getElementById('eventoDescricao').value.trim(),
-  };
-
-  if (id) {
-    const idx = eventos.findIndex(ev => String(ev.id) === String(id));
-    if (idx > -1) eventos[idx] = { ...eventos[idx], ...dadosEvento };
-  } else {
-    const novoId = eventos.length ? Math.max(...eventos.map(e => e.id)) + 1 : 1;
-    eventos.push({ id: novoId, ...dadosEvento });
-  }
-
-  salvarEventos(eventos);
-  renderEventos();
-  fecharModalEvento();
+    categoria: document.getElementById('eventoCategoria').value,
+    horario: document.getElementById('eventoHorario').value.trim(),
+    local: document.getElementById('eventoLocal').value.trim(),
 });
 
-document.getElementById('eventosTableBody').addEventListener('click', (e) => {
+
+  try {
+    if (id) await api('/api/eventos/' + id, { method: 'PUT', body: corpo });
+    else await api('/api/eventos', { method: 'POST', body: corpo });
+    await carregarEventos();
+    fecharModalEvento();
+  } catch (erro) {
+    alert(erro.message);
+  }
+});
+
+document.getElementById('eventosTableBody').addEventListener('click', async (e) => {
   const editarBtn = e.target.closest('[data-editar-evento]');
   const apagarBtn = e.target.closest('[data-apagar-evento]');
   if (editarBtn) {
     const id = editarBtn.getAttribute('data-editar-evento');
-    const evento = getEventos().find(ev => String(ev.id) === String(id));
+    const evento = eventos.find(ev => String(ev.id) === String(id));
     if (evento) abrirModalEvento(evento);
   }
   if (apagarBtn) {
     const id = apagarBtn.getAttribute('data-apagar-evento');
     if (confirm('Tem certeza que deseja apagar este evento?')) {
-      const eventos = getEventos().filter(ev => String(ev.id) !== String(id));
-      salvarEventos(eventos);
-      renderEventos();
+      try {
+        await api('/api/eventos/' + id, { method: 'DELETE' });
+        await carregarEventos();
+      } catch (erro) {
+        alert(erro.message);
+      }
     }
   }
 });
@@ -260,11 +255,6 @@ document.getElementById('eventosTableBody').addEventListener('click', (e) => {
 const avisoModalOverlay = document.getElementById('avisoModalOverlay');
 const avisoForm = document.getElementById('avisoForm');
 const avisoModalTitle = document.getElementById('avisoModalTitle');
-
-function hojeISO(){
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
-}
 
 function abrirModalAviso(aviso){
   avisoForm.reset();
@@ -288,7 +278,7 @@ document.getElementById('avisoModalClose').addEventListener('click', fecharModal
 document.getElementById('avisoCancelar').addEventListener('click', fecharModalAviso);
 avisoModalOverlay.addEventListener('click', (e) => { if (e.target === avisoModalOverlay) fecharModalAviso(); });
 
-avisoForm.addEventListener('submit', (e) => {
+avisoForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const tituloField = document.getElementById('avisoTitulo');
   const mensagemField = document.getElementById('avisoMensagem');
@@ -299,38 +289,38 @@ avisoForm.addEventListener('submit', (e) => {
   if (!tituloOk || !mensagemOk) return;
 
   const id = document.getElementById('avisoId').value;
-  const avisos = getAvisos();
+  const corpo = JSON.stringify({
+    titulo: tituloField.value.trim(),
+    mensagem: mensagemField.value.trim(),
+  });
 
-  if (id) {
-    const idx = avisos.findIndex(av => String(av.id) === String(id));
-    if (idx > -1) {
-      avisos[idx].titulo = tituloField.value.trim();
-      avisos[idx].mensagem = mensagemField.value.trim();
-    }
-  } else {
-    const novoId = avisos.length ? Math.max(...avisos.map(a => a.id)) + 1 : 1;
-    avisos.unshift({ id: novoId, titulo: tituloField.value.trim(), mensagem: mensagemField.value.trim(), data: hojeISO() });
+  try {
+    if (id) await api('/api/avisos/' + id, { method: 'PUT', body: corpo });
+    else await api('/api/avisos', { method: 'POST', body: corpo });
+    await carregarAvisos();
+    fecharModalAviso();
+  } catch (erro) {
+    alert(erro.message);
   }
-
-  salvarAvisos(avisos);
-  renderAvisos();
-  fecharModalAviso();
 });
 
-document.getElementById('avisosList').addEventListener('click', (e) => {
+document.getElementById('avisosList').addEventListener('click', async (e) => {
   const editarBtn = e.target.closest('[data-editar-aviso]');
   const apagarBtn = e.target.closest('[data-apagar-aviso]');
   if (editarBtn) {
     const id = editarBtn.getAttribute('data-editar-aviso');
-    const aviso = getAvisos().find(av => String(av.id) === String(id));
+    const aviso = avisos.find(av => String(av.id) === String(id));
     if (aviso) abrirModalAviso(aviso);
   }
   if (apagarBtn) {
     const id = apagarBtn.getAttribute('data-apagar-aviso');
     if (confirm('Tem certeza que deseja apagar este aviso?')) {
-      const avisos = getAvisos().filter(av => String(av.id) !== String(id));
-      salvarAvisos(avisos);
-      renderAvisos();
+      try {
+        await api('/api/avisos/' + id, { method: 'DELETE' });
+        await carregarAvisos();
+      } catch (erro) {
+        alert(erro.message);
+      }
     }
   }
 });
@@ -343,6 +333,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ---------- Primeira renderização ----------
-renderEventos();
-renderAvisos();
+// ---------- Primeira carga: busca eventos e avisos na API ----------
+if (logado) {
+  Promise.all([carregarEventos(), carregarAvisos()]).catch(erro => alert(erro.message));
+}

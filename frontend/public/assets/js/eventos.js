@@ -82,38 +82,269 @@ contrastBtn.addEventListener('click', () => {
 });
 
 // ---------- Página de Eventos: filtro por mês ----------
-// Pega todos os botões de filtro ("Todos os Meses", "Setembro", "Outubro")
-// e todos os cards de evento da lista, além da mensagem de "lista vazia".
-const monthFilters = document.querySelectorAll('.month-filter');
-const eventCards = document.querySelectorAll('#eventsList .event-card');
+
+/* ---------- Eventos públicos: integração com a API ---------- */
+
+const eventsList = document.getElementById('eventsList');
 const eventsEmpty = document.getElementById('eventsEmpty');
+const monthFilterContainer = document.querySelector('.month-filter')?.parentElement;
 
-// Só ativa o filtro se os elementos realmente existirem na página
-// (evita erro caso este script seja carregado em outra tela por engano)
-if (monthFilters.length && eventCards.length) {
-  monthFilters.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Remove o estado "ativo" de todos os botões de filtro...
-      monthFilters.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      // ...e marca como ativo só o botão que foi clicado
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
+let eventosCarregados = [];
 
-      // Cada card de evento tem um atributo data-month (ex: "09" ou "10").
-      // "todos" mostra tudo; qualquer outro valor mostra só os que baterem.
-      const month = btn.getAttribute('data-month');
-      let visibleCount = 0;
-      eventCards.forEach(card => {
-        const match = month === 'todos' || card.getAttribute('data-month') === month;
-        card.style.display = match ? '' : 'none';
-        if (match) visibleCount++;
-      });
+const nomesMeses = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril',
+  'Maio', 'Junho', 'Julho', 'Agosto',
+  'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+];
 
-      // Se nenhum evento bateu com o filtro, mostra a mensagem de "vazio"
-      if (eventsEmpty) eventsEmpty.hidden = visibleCount > 0;
-    });
+// Formata a data sem correr o risco de mudar o dia por causa do fuso horário.
+function formatarData(data) {
+  const partes = String(data).slice(0, 10).split('-');
+
+  if (partes.length !== 3) return String(data);
+
+  const [ano, mes, dia] = partes;
+  return `${dia}/${mes}/${ano}`;
+}
+
+
+function criarCartao(evento) {
+  const cartao = document.createElement('article');
+  cartao.className = 'event-card';
+
+  const dataTexto = String(evento.data || '').slice(0, 10);
+  const [ano, mes, dia] = dataTexto.split('-');
+  const numeroMes = Number(mes);
+
+  cartao.dataset.month = mes || '';
+
+  // Cores das categorias
+  const coresCategorias = {
+    Atendimento: '#1B3A6B',
+    Oficina: '#2A7D4F',
+    Saúde: '#059669',
+    Evento: '#E8600A'
+  };
+
+  const categoria = String(evento.categoria || '').trim();
+  const corCategoria = coresCategorias[categoria] || '#1B3A6B';
+
+  // Bloco da data
+  const blocoData = document.createElement('div');
+  blocoData.className = 'event-date';
+  blocoData.style.backgroundColor = corCategoria;
+
+  const diaElemento = document.createElement('span');
+  diaElemento.className = 'day';
+  diaElemento.textContent = dia || '--';
+
+  const mesElemento = document.createElement('span');
+  mesElemento.className = 'mon';
+  mesElemento.textContent =
+    numeroMes >= 1 && numeroMes <= 12
+      ? nomesMeses[numeroMes - 1].slice(0, 3)
+      : '';
+
+  blocoData.append(diaElemento, mesElemento);
+
+  // Informações do evento
+  const informacoes = document.createElement('div');
+  informacoes.className = 'event-info';
+
+  // Categoria e data completa
+  const linhaEtiqueta = document.createElement('div');
+  linhaEtiqueta.className = 'event-tag-row';
+
+  if (categoria) {
+    const etiqueta = document.createElement('span');
+    etiqueta.className = 'event-category';
+    etiqueta.textContent = categoria;
+    etiqueta.style.backgroundColor = corCategoria;
+    linhaEtiqueta.appendChild(etiqueta);
+  }
+
+  const dataCompleta = document.createElement('span');
+  dataCompleta.className = 'event-fulldate';
+  dataCompleta.textContent = dataTexto
+    ? `${dia} de ${nomesMeses[numeroMes - 1] || ''} de ${ano}`
+    : 'Data a confirmar';
+
+  linhaEtiqueta.appendChild(dataCompleta);
+
+  // Título
+  const titulo = document.createElement('h3');
+  titulo.textContent = evento.nome || 'Evento sem título';
+
+  // Horário e local
+  const meta = document.createElement('div');
+  meta.className = 'event-meta';
+
+  if (evento.horario) {
+    const horario = document.createElement('span')
+
+    const iconeRelogio = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    iconeRelogio.setAttribute('viewBox', '0 0 24 24');
+    iconeRelogio.setAttribute('fill', '#E8600A');
+
+    const desenhoRelogio = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    desenhoRelogio.setAttribute('d', 'M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5v5.4l4 2.3-.9 1.5-4.85-2.8V7h1.75z');
+
+    iconeRelogio.appendChild(desenhoRelogio);
+    horario.append(iconeRelogio, document.createTextNode(evento.horario));
+    meta.appendChild(horario);
+
+  }
+
+  if (evento.local) {
+    const local = document.createElement('span');
+    
+    const iconeLocal = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    iconeLocal.setAttribute('viewBox', '0 0 24 24');
+    iconeLocal.setAttribute('fill', '#E8600A');
+    
+    const desenhoLocal = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    desenhoLocal.setAttribute('d', 'M12 2C7 2 4 5.6 4 9.6 4 15 12 22 12 22s8-7 8-12.4C20 5.6 17 2 12 2zm0 10a2.4 2.4 0 110-4.8 2.4 2.4 0 010 4.8z');
+    
+    iconeLocal.appendChild(desenhoLocal);
+    local.append(iconeLocal, document.createTextNode(evento.local));
+    meta.appendChild(local);
+
+  }
+
+  // Descrição
+  const descricao = document.createElement('p');
+  descricao.className = 'event-desc';
+  descricao.textContent =
+    evento.descricao || 'Mais informações em breve.';
+
+  informacoes.append(linhaEtiqueta, titulo, meta, descricao);
+  cartao.append(blocoData, informacoes);
+
+  return cartao;
+}
+
+// Aplica o filtro selecionado.
+function aplicarFiltro(mesSelecionado) {
+  const cartoes = eventsList.querySelectorAll('.event-card');
+  let quantidadeVisivel = 0;
+
+  cartoes.forEach(cartao => {
+    const corresponde =
+      mesSelecionado === 'todos' ||
+      cartao.dataset.month === mesSelecionado;
+
+    cartao.hidden = !corresponde;
+
+    if (corresponde) quantidadeVisivel++;
+  });
+
+  if (eventsEmpty) {
+    eventsEmpty.hidden = quantidadeVisivel > 0;
+    eventsEmpty.textContent =
+      'Nenhum evento encontrado para este mês.';
+  }
+}
+
+// Mantém os filtros existentes e adiciona os meses necessários.
+function prepararFiltros(eventos) {
+  if (!monthFilterContainer) return;
+
+  const filtrosExistentes = [
+    ...monthFilterContainer.querySelectorAll('.month-filter')
+  ];
+
+  const filtroTodos = filtrosExistentes.find(
+    botao => botao.dataset.month === 'todos'
+  );
+
+  if (!filtroTodos) return;
+
+  const meses = [...new Set(
+    eventos
+      .map(evento => String(evento.data).slice(0, 10).split('-')[1])
+      .filter(mes => /^\d{2}$/.test(mes) &&
+        Number(mes) >= 1 && Number(mes) <= 12)
+  )].sort();
+
+  meses.forEach(mes => {
+    const jaExiste = monthFilterContainer.querySelector(
+      `.month-filter[data-month="${mes}"]`
+    );
+
+    if (jaExiste) return;
+
+    const botao = filtroTodos.cloneNode(true);
+    botao.dataset.month = mes;
+    botao.textContent = nomesMeses[Number(mes) - 1];
+    botao.classList.remove('active');
+    botao.setAttribute('aria-selected', 'false');
+
+    monthFilterContainer.appendChild(botao);
   });
 }
+
+// Carrega os eventos cadastrados no banco por meio do backend.
+async function carregarEventos() {
+  if (!eventsList) return;
+
+  try {
+    const resposta = await fetch('/api/eventos');
+
+    if (!resposta.ok) {
+      throw new Error(`A API respondeu com status ${resposta.status}`);
+    }
+
+    const eventos = await resposta.json();
+
+    if (!Array.isArray(eventos)) {
+      throw new Error('A resposta da API não contém uma lista de eventos.');
+    }
+
+    eventosCarregados = eventos;
+
+    // Remove os eventos de exemplo escritos diretamente no HTML.
+    eventsList.querySelectorAll('.event-card').forEach(cartao => {
+      cartao.remove();
+    });
+
+    // Cria os cartões com os dados vindos do banco.
+    eventosCarregados.forEach(evento => {
+      eventsList.insertBefore(
+        criarCartao(evento),
+        eventsEmpty || null
+      );
+    });
+
+    prepararFiltros(eventosCarregados);
+    aplicarFiltro('todos');
+  } catch (erro) {
+    console.error('Erro ao carregar eventos:', erro);
+
+    if (eventsEmpty) {
+      eventsEmpty.textContent =
+        'Não foi possível carregar os eventos. Tente novamente mais tarde.';
+      eventsEmpty.hidden = false;
+    }
+  }
+}
+
+// Delegação de eventos: funciona também com os filtros criados dinamicamente.
+if (monthFilterContainer) {
+  monthFilterContainer.addEventListener('click', evento => {
+    const botao = evento.target.closest('.month-filter');
+
+    if (!botao || !monthFilterContainer.contains(botao)) return;
+
+    monthFilterContainer.querySelectorAll('.month-filter').forEach(filtro => {
+      filtro.classList.remove('active');
+      filtro.setAttribute('aria-selected', 'false');
+    });
+
+    botao.classList.add('active');
+    botao.setAttribute('aria-selected', 'true');
+
+    aplicarFiltro(botao.dataset.month);
+  });
+}
+
+carregarEventos();

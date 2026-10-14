@@ -2,11 +2,7 @@
 // SCRIPT DA TELA DE LOGIN (Área Administrativa) — arquivo próprio
 // e independente. Contém: acessibilidade (fonte e alto contraste),
 // mostrar/esconder senha e a validação do formulário de login.
-//
-// IMPORTANTE: ainda não existe uma rota de login no back-end, então
-// a autenticação aqui é só uma SIMULAÇÃO no front-end, usando as
-// credenciais de demonstração. Quando a rota real existir, troque o
-// bloco marcado abaixo por uma chamada fetch('/api/login', ...).
+// com a API (POST /api/login) e guarda o token da sessão.
 // ============================================================
 
 // ---------- Acessibilidade: tamanho da fonte (14px a 24px, de 2 em 2, padrão 18px) ----------
@@ -55,12 +51,9 @@ toggleBtn.addEventListener('click', () => {
 // ---------- Validação e login (simulado) ----------
 const form = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
+const loginBtn = document.getElementById('loginBtn');
 const campoEmail = document.getElementById('email');
 const campoSenha = document.getElementById('senha');
-
-// Credenciais de demonstração (front-end apenas, sem segurança real)
-const DEMO_EMAIL = 'admin@cras.gov.br';
-const DEMO_SENHA = 'cras2026';
 
 function marcarValidade(campo, valido){
   const wrapper = campo.closest('.form-field');
@@ -74,6 +67,11 @@ function validarCampos(){
   return emailOk && senhaOk;
 }
 
+function mostrarErro(texto){
+  loginError.querySelector('span').textContent = texto;
+  loginError.hidden = false;
+}
+
 [campoEmail, campoSenha].forEach(campo => {
   campo.addEventListener('input', () => {
     const wrapper = campo.closest('.form-field');
@@ -82,7 +80,7 @@ function validarCampos(){
   });
 });
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
   loginError.hidden = true;
 
@@ -94,19 +92,31 @@ form.addEventListener('submit', (event) => {
   }
 
   // 2) Depois confere as credenciais
-  //    >>> TROCAR por uma chamada real à API quando o back-end tiver a rota de login <<<
-  const emailDigitado = campoEmail.value.trim().toLowerCase();
-  const senhaDigitada = campoSenha.value;
+  loginBtn.disabled = true;
+  try {
+    const resposta = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: campoEmail.value.trim(),
+        senha: campoSenha.value,
+      }),
+    });
+    const dados = await resposta.json().catch(() => ({}));
 
-  if (emailDigitado === DEMO_EMAIL && senhaDigitada === DEMO_SENHA) {
-    // Login "válido": guarda uma flag simples pra outras telas do admin
-    // saberem que a pessoa passou pela tela de login (ainda sem token real).
-    sessionStorage.setItem('cras_admin_logado', 'true');
-    // Quando o painel administrativo existir, o redirecionamento é para ele:
-    window.location.href = 'dashboard.html';
-  } else {
-    loginError.hidden = false;
+    if (resposta.ok && dados.token) {
+      // Guarda o token da sessão: o dashboard envia ele em cada pedido à API
+      sessionStorage.setItem('cras_admin_token', dados.token);
+      window.location.href = 'dashboard.html';
+      return;
+    }
+
+    mostrarErro(dados.erro || 'E-mail ou senha incorretos.');
     campoSenha.value = '';
     campoSenha.focus();
+  } catch (erro) {
+    mostrarErro('Não foi possível conectar ao servidor. Tente novamente.');
+  } finally {
+    loginBtn.disabled = false;
   }
 });

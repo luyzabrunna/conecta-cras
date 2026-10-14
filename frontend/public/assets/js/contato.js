@@ -2,7 +2,8 @@
 // SCRIPT DA PÁGINA DE CONTATO — arquivo próprio e independente
 // (não depende do script.js da Home nem do eventos.js). Contém:
 // menu mobile, acessibilidade (fonte e alto contraste) e a
-// validação do formulário de Ouvidoria / Sugestões.
+// validação do formulário de Ouvidoria / Sugestões, que agora
+// envia a mensagem para a API (POST /api/ouvidoria).
 // ============================================================
 
 // ---------- Menu mobile (aparece abaixo do cabeçalho em telas pequenas) ----------
@@ -62,12 +63,11 @@ contrastBtn.addEventListener('click', () => {
 });
 
 // ============================================================
-// FORMULÁRIO DE OUVIDORIA — validação
+// FORMULÁRIO DE OUVIDORIA — validação e envio
 // Campos obrigatórios (com *): nome, tipo de mensagem e mensagem.
 // O e-mail é opcional, mas se for preenchido precisa ter um formato válido.
-// O formulário SÓ é considerado "enviado" se passar em todas as regras;
-// caso contrário, a mensagem NÃO é enviada e o campo com problema é
-// destacado em vermelho com o aviso embaixo dele.
+// A mensagem só é enviada para a API se passar em todas as regras;
+// caso contrário, a mensagem NÃO é enviada e o campo com problema é destacado em vermelho.
 // ============================================================
 const form = document.getElementById('ouvidoriaForm');
 const formSuccess = document.getElementById('formSuccess');
@@ -119,7 +119,7 @@ function validarFormulario(){
   });
 });
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   // Sempre impede o comportamento padrão do navegador primeiro
   event.preventDefault();
 
@@ -137,22 +137,32 @@ form.addEventListener('submit', (event) => {
   }
 
   // Tudo certo — aqui é o ponto para, no futuro, enviar os dados
-  // para a API real do backend (routes/crasRoutes.js), por exemplo:
-  //
-  // fetch('/api/ouvidoria', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({
-  //     nome: campoNome.value.trim(),
-  //     email: campoEmail.value.trim(),
-  //     tipo: campoTipo.value,
-  //     mensagem: campoMensagem.value.trim(),
-  //   }),
-  // });
-  //
-  // Por enquanto, como ainda não há back-end conectado nesta tela,
-  // só mostramos a confirmação visual de que o formulário é válido.
   submitBtn.disabled = true;
+  try {
+    const resposta = await fetch('/api/ouvidoria', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome: campoNome.value.trim(),
+        email: campoEmail.value.trim(),
+        tipo: campoTipo.value,
+        mensagem: campoMensagem.value.trim(),
+      }),
+    });
+
+    if (!resposta.ok) {
+      const dados = await resposta.json().catch(() => ({}));
+      alert(dados.erro || 'Não foi possível enviar sua mensagem. Tente novamente.');
+      submitBtn.disabled = false;
+      return;
+    }
+  } catch (erro) {
+    alert('Não foi possível conectar ao servidor. Tente novamente.');
+    submitBtn.disabled = false;
+    return;
+  }
+
+  // Deu certo: mostra a confirmação visual
   form.querySelectorAll('.form-field').forEach(f => f.style.display = 'none');
   formSuccess.hidden = false;
   submitBtn.hidden = true;

@@ -168,6 +168,36 @@
         <label for="eventoDescricao">Descrição (opcional)</label>
         <textarea id="eventoDescricao" rows="3" placeholder="Detalhes do evento..."></textarea>
       </div>
+      
+      <div class="form-field">
+        <label for="eventoCategoria">Categoria</label>
+        <select id="eventoCategoria">
+        <option value="">Selecione uma categoria</option>
+        <option value="Atendimento">Atendimento</option>
+        <option value="Oficina">Oficina</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Evento">Evento</option>
+       </select>
+</div>
+
+<div class="form-field">
+  <label for="eventoHorario">Horário</label>
+  <input
+    type="text"
+    id="eventoHorario"
+    placeholder="Ex.: 08h00 às 12h00"
+  >
+</div>
+
+<div class="form-field">
+  <label for="eventoLocal">Local</label>
+  <input
+    type="text"
+    id="eventoLocal"
+    placeholder="Ex.: CRAS Vila São João"
+  >
+</div>
+
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" id="eventoCancelar">Cancelar</button>
         <button type="submit" class="btn btn-navy">Salvar Evento</button>

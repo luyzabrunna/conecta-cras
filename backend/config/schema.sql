@@ -15,6 +15,10 @@ CREATE TABLE eventos (
   `data` DATE NOT NULL,
   status ENUM('Ativo', 'Rascunho', 'Encerrado') NOT NULL DEFAULT 'Ativo',
   descricao TEXT,
+  categoria VARCHAR(100) NULL,
+  horario VARCHAR(100) NULL,
+  local VARCHAR(255) NULL,
+
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) DEFAULT CHARSET = utf8mb4;
 
@@ -43,11 +47,11 @@ CREATE TABLE usuarios (
 ) DEFAULT CHARSET = utf8mb4;
 
 -- Dados de exemplo (os mesmos do painel e do protótipo)
-INSERT INTO eventos (nome, `data`, status, descricao) VALUES
-('Mutirão de Cadastro Único', '2026-09-05', 'Ativo', 'Atendimento especial para atualização e inclusão no Cadastro Único.'),
-('Oficina de Empreendedorismo Feminino', '2026-09-10', 'Ativo', 'Curso gratuito de empreendedorismo para mulheres.'),
-('Vacinação e Orientação de Saúde', '2026-09-18', 'Ativo', 'Mutirão de vacinação em parceria com a UBS.'),
-('Semana da Criança', '2026-10-07', 'Rascunho', '');
+INSERT INTO eventos (nome, `data`, status, descricao, categoria, horario, local) VALUES
+('Mutirão de Cadastro Único', '2026-09-05', 'Ativo', 'Atendimento especial para atualização e inclusão no Cadastro Único.', 'Cadastro', '08:00 - 12:00', 'Centro de Referência'),
+('Oficina de Empreendedorismo Feminino', '2026-09-10', 'Ativo', 'Curso gratuito de empreendedorismo para mulheres.', 'Empreendedorismo', '14:00 - 16:00', 'Sala de Aula'),
+('Vacinação e Orientação de Saúde', '2026-09-18', 'Ativo', 'Mutirão de vacinação em parceria com a UBS.', 'Saúde', '09:00 - 17:00', 'UBS'),
+('Semana da Criança', '2026-10-07', 'Rascunho', '',  'Evento', '08h00 às 17h00', 'CRAS Vila São João');
 
 INSERT INTO avisos (titulo, mensagem, `data`) VALUES
 ('Sistema CadÚnico em Manutenção', 'O sistema estará em manutenção entre 01 e 05 de setembro. Agendamentos nesse período serão remarcados. Ligue: (63) 99961-8630.', '2026-09-01'),
