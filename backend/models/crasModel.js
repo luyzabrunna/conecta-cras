@@ -1,7 +1,6 @@
 const pool = require('../config/db');
 
-// Aqui ficam só as queries — nada de lógica de requisição/resposta,
-// isso é responsabilidade do controller.
+// Aqui ficam só as queries 
 
 async function listarTodos() {
   const [rows] = await pool.query('SELECT * FROM cras');

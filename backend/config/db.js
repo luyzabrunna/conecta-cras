@@ -1,16 +1,18 @@
 const mysql = require('mysql2/promise');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
-// Pool de conexões: reaproveita conexões com o banco em vez de abrir
-// uma nova a cada requisição, o que é mais eficiente.
+// Create a MySQL connection pool
+// Use environment variables for database configuration, with default values if not provided
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'root',
+  database: process.env.DB_NAME || 'conecta_cras',
   waitForConnections: true,
   connectionLimit: 10,
+  dateStrings: true,
+  charset: 'utf8mb4',
 });
 
 module.exports = pool;

@@ -1,7 +1,6 @@
 const crasModel = require('../models/crasModel');
 
 // Cada função aqui recebe a requisição (req) e devolve uma resposta (res).
-// A lógica de "o que fazer" fica aqui; a query em si fica no model.
 
 async function listarTodos(req, res) {
   try {
