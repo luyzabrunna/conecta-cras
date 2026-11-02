@@ -6,6 +6,7 @@ const eventoRoutes = require('./routes/eventoRoutes');
 const avisoRoutes = require('./routes/avisoRoutes');
 const ouvidoriaRoutes = require('./routes/ouvidoriaRoutes');
 const authRoutes = require('./routes/authRoutes');
+const { protegerPaginasAdmin } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,7 +15,19 @@ app.use(express.json());
 
 // Frontend: site público na raiz e painel administrativo em /admin
 app.use('/', express.static(path.join(__dirname, '../frontend/public')));
-app.use('/admin', express.static(path.join(__dirname, '../frontend/admin')));
+// Painel administrativo: o servidor só entrega estas páginas para quem tem sessão válida.
+// Sem sessão, a pessoa é mandada para o login antes de qualquer HTML sair daqui.
+// no-store: o navegador também não guarda cópia das telas, então as setas
+// voltar/avançar sempre voltam a perguntar ao servidor.
+app.use(
+  '/admin',
+  (req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+  },
+  protegerPaginasAdmin,
+  express.static(path.join(__dirname, '../frontend/admin'))
+);
 
 // Teste rápido: confirma que a API está de pé e conversando com o banco
 app.get('/api/status', async (req, res) => {
@@ -30,7 +43,7 @@ app.get('/api/status', async (req, res) => {
 app.use('/api/eventos', eventoRoutes);
 app.use('/api/avisos', avisoRoutes);
 app.use('/api/ouvidoria', ouvidoriaRoutes);
-app.use('/api', authRoutes); // POST /api/login
+app.use('/api', authRoutes); // POST /api/login e /api/logout
 
 // Qualquer outra rota /api/... que não existe
 app.use('/api', (req, res) => {

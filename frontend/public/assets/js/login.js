@@ -2,7 +2,7 @@
 // SCRIPT DA TELA DE LOGIN (Área Administrativa) — arquivo próprio
 // e independente. Contém: acessibilidade (fonte e alto contraste),
 // mostrar/esconder senha e a validação do formulário de login.
-// com a API (POST /api/login) e guarda o token da sessão.
+// com a API (POST /api/login). O servidor guarda a sessão num cookie.
 // ============================================================
 
 // ---------- Acessibilidade: tamanho da fonte (14px a 24px, de 2 em 2, padrão 18px) ----------
@@ -48,7 +48,7 @@ toggleBtn.addEventListener('click', () => {
   eyeClosed.style.display = mostrando ? 'none' : '';
 });
 
-// ---------- Validação e login (simulado) ----------
+// ---------- Validação e login ----------
 const form = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
 const loginBtn = document.getElementById('loginBtn');
@@ -91,7 +91,7 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  // 2) Depois confere as credenciais
+  // 2) Depois pede para a API conferir e-mail e senha
   loginBtn.disabled = true;
   try {
     const resposta = await fetch('/api/login', {
@@ -104,9 +104,9 @@ form.addEventListener('submit', async (event) => {
     });
     const dados = await resposta.json().catch(() => ({}));
 
-    if (resposta.ok && dados.token) {
-      // Guarda o token da sessão: o dashboard envia ele em cada pedido à API
-      sessionStorage.setItem('cras_admin_token', dados.token);
+    if (resposta.ok) {
+      // O servidor já guardou a sessão num cookie.
+      // replace() tira a tela de login do histórico: a seta de voltar não cai nela de novo.
       window.location.href = 'dashboard.html';
       return;
     }

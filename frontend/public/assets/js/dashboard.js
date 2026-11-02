@@ -5,22 +5,30 @@
 //
 // Os dados agora vêm da API e ficam no banco de dados MySQL
 // (antes ficavam no localStorage do navegador). Cada pedido à API
-// leva o token de login no cabeçalho Authorization.
+// leva junto o cookie de sessão, que é controlado pelo servidor.
 // ============================================================
 
-const TOKEN_KEY = 'cras_admin_token';
-
+// ---------- Sessão ----------
+// A sessão fica num cookie controlado pelo servidor: o JavaScript não consegue ler nem copiar.
+// Quem barra o acesso a esta página é o servidor, que só entrega o HTML para quem está logado.
+// O Sair vai para /api/logout, onde o servidor apaga o cookie e leva para o login.
+// replace() troca a página no histórico em vez de empilhar outra.
 function sair(){
-  sessionStorage.removeItem(TOKEN_KEY);
-  window.location.href = 'login.html';
+  window.location.replace('/api/logout');
 }
 
-// ---------- Trava de login ----------
-// Sem token de sessão, manda a pessoa de volta pro login.
-const logado = !!sessionStorage.getItem(TOKEN_KEY);
-if (!logado) sair();
-
 document.getElementById('logoutBtn').addEventListener('click', sair);
+
+// As setas voltar/avançar podem reabrir o painel guardado na memória do navegador,
+// sem pedir nada ao servidor. Nesse caso o painel fica escondido até a sessão ser conferida:
+// se ela acabou, o servidor responde 401 e a pessoa vai para o login.
+window.addEventListener('pageshow', (evento) => {
+  if (!evento.persisted) return;
+  document.documentElement.style.visibility = 'hidden';
+  Promise.all([carregarEventos(), carregarAvisos()])
+    .then(() => { document.documentElement.style.visibility = ''; })
+    .catch((erro) => { if (!erro.sessaoExpirada) document.documentElement.style.visibility = ''; });
+});
 
 // ---------- Acessibilidade: tamanho da fonte ----------
 const root = document.documentElement;
@@ -42,18 +50,18 @@ contrastBtn.addEventListener('click', () => {
 // COMUNICAÇÃO COM A API
 // ============================================================
 
-// Faz o pedido à API já com o token. Se o token venceu (401), volta pro login.
+// Faz o pedido à API com o cookie de sessão. Se a sessão acabou (401), volta pro login.
 async function api(caminho, opcoes = {}){
   const resposta = await fetch(caminho, {
     ...opcoes,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + sessionStorage.getItem(TOKEN_KEY),
-    },
+    credentials: 'same-origin', // envia o cookie de sessão
+    headers: { 'Content-Type': 'application/json' },
   });
   if (resposta.status === 401) {
     sair();
-    throw new Error('Sessão expirada. Entre novamente.');
+    const erro = new Error('Sessão expirada. Entre novamente.');
+    erro.sessaoExpirada = true;
+    throw erro;
   }
   const dados = resposta.status === 204 ? null : await resposta.json().catch(() => null);
   if (!resposta.ok) {
@@ -217,7 +225,6 @@ eventoForm.addEventListener('submit', async (e) => {
     local: document.getElementById('eventoLocal').value.trim(),
 });
 
-
   try {
     if (id) await api('/api/eventos/' + id, { method: 'PUT', body: corpo });
     else await api('/api/eventos', { method: 'POST', body: corpo });
@@ -334,6 +341,5 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ---------- Primeira carga: busca eventos e avisos na API ----------
-if (logado) {
-  Promise.all([carregarEventos(), carregarAvisos()]).catch(erro => alert(erro.message));
-}
+Promise.all([carregarEventos(), carregarAvisos()])
+  .catch(erro => { if (!erro.sessaoExpirada) alert(erro.message); });
