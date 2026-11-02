@@ -48,10 +48,10 @@ CREATE TABLE usuarios (
 
 -- Dados de exemplo (os mesmos do painel e do protótipo)
 INSERT INTO eventos (nome, `data`, status, descricao, categoria, horario, local) VALUES
-('Mutirão de Cadastro Único', '2026-09-05', 'Ativo', 'Atendimento especial para atualização e inclusão no Cadastro Único.', 'Cadastro', '08:00 - 12:00', 'Centro de Referência'),
-('Oficina de Empreendedorismo Feminino', '2026-09-10', 'Ativo', 'Curso gratuito de empreendedorismo para mulheres.', 'Empreendedorismo', '14:00 - 16:00', 'Sala de Aula'),
-('Vacinação e Orientação de Saúde', '2026-09-18', 'Ativo', 'Mutirão de vacinação em parceria com a UBS.', 'Saúde', '09:00 - 17:00', 'UBS'),
-('Semana da Criança', '2026-10-07', 'Rascunho', '',  'Evento', '08h00 às 17h00', 'CRAS Vila São João');
+('Mutirão de Cadastro Único', CURDATE() + INTERVAL 7 DAY, 'Ativo', 'Atendimento especial para atualização e inclusão no Cadastro Único.', 'Atendimento', '08h00 às 12h00', 'CRAS Vila São João'),
+('Oficina de Empreendedorismo Feminino', CURDATE() + INTERVAL 14 DAY, 'Ativo', 'Curso gratuito de empreendedorismo para mulheres.', 'Oficina', '14h00 às 16h00', 'Salão Comunitário, Rua Araguaia'),
+('Vacinação e Orientação de Saúde', CURDATE() + INTERVAL 21 DAY, 'Ativo', 'Mutirão de vacinação em parceria com a UBS.', 'Saúde', '09h00 às 11h00', 'CRAS Vila São João'),
+('Semana da Criança', CURDATE() + INTERVAL 30 DAY, 'Rascunho', '', 'Evento', '13h00 às 17h00', 'CRAS Vila São João');
 
 INSERT INTO avisos (titulo, mensagem, `data`) VALUES
 ('Sistema CadÚnico em Manutenção', 'O sistema estará em manutenção entre 01 e 05 de setembro. Agendamentos nesse período serão remarcados. Ligue: (63) 99961-8630.', '2026-09-01'),
