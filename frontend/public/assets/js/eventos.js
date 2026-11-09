@@ -97,6 +97,19 @@ const nomesMeses = [
   'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 ];
 
+// "2026-11-05" vira "2026-11" (ano e mês juntos). Assim, novembro de 2026 e
+// novembro de 2027 não se misturam no mesmo botão de filtro.
+function chaveMes(data) {
+  const [ano, mes] = String(data || '').slice(0, 10).split('-');
+  return /^\d{4}$/.test(ano) && /^(0[1-9]|1[0-2])$/.test(mes) ? `${ano}-${mes}` : '';
+}
+
+// Data de hoje no horário do computador, no formato AAAA-MM-DD.
+function hojeISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 // Formata a data sem correr o risco de mudar o dia por causa do fuso horário.
 function formatarData(data) {
   const partes = String(data).slice(0, 10).split('-');
@@ -240,47 +253,48 @@ function aplicarFiltro(mesSelecionado) {
 
   if (eventsEmpty) {
     eventsEmpty.hidden = quantidadeVisivel > 0;
-    eventsEmpty.textContent =
-      'Nenhum evento encontrado para este mês.';
+    eventsEmpty.textContent = mesSelecionado === 'todos'
+      ? 'Nenhum evento programado no momento. Volte em breve!'
+      : 'Nenhum evento encontrado para este mês.';
   }
 }
 
-// Mantém os filtros existentes e adiciona os meses necessários.
+// Monta os botões de mês só com os meses que têm evento na lista.
+// Os botões escritos à mão no HTML (Setembro, Outubro) são removidos aqui:
+// se um mês ficou sem evento, o botão dele também some.
 function prepararFiltros(eventos) {
   if (!monthFilterContainer) return;
 
-  const filtrosExistentes = [
-    ...monthFilterContainer.querySelectorAll('.month-filter')
-  ];
-
-  const filtroTodos = filtrosExistentes.find(
-    botao => botao.dataset.month === 'todos'
-  );
-
+  const filtroTodos = monthFilterContainer.querySelector('.month-filter[data-month="todos"]');
   if (!filtroTodos) return;
 
-  const meses = [...new Set(
-    eventos
-      .map(evento => String(evento.data).slice(0, 10).split('-')[1])
-      .filter(mes => /^\d{2}$/.test(mes) &&
-        Number(mes) >= 1 && Number(mes) <= 12)
+  monthFilterContainer.querySelectorAll('.month-filter').forEach(botao => {
+    if (botao !== filtroTodos) botao.remove();
+  });
+
+  filtroTodos.classList.add('active');
+  filtroTodos.setAttribute('aria-selected', 'true');
+
+  const chaves = [...new Set(
+    eventos.map(evento => chaveMes(evento.data)).filter(Boolean)
   )].sort();
 
-  meses.forEach(mes => {
-    const jaExiste = monthFilterContainer.querySelector(
-      `.month-filter[data-month="${mes}"]`
-    );
+  const anoAtual = String(new Date().getFullYear());
 
-    if (jaExiste) return;
+  chaves.forEach(chave => {
+    const [ano, mes] = chave.split('-');
 
     const botao = filtroTodos.cloneNode(true);
-    botao.dataset.month = mes;
-    botao.textContent = nomesMeses[Number(mes) - 1];
+    botao.dataset.month = chave;
+    botao.textContent = nomesMeses[Number(mes) - 1] + (ano !== anoAtual ? ` de ${ano}` : '');
     botao.classList.remove('active');
     botao.setAttribute('aria-selected', 'false');
 
     monthFilterContainer.appendChild(botao);
   });
+
+  // Sem nenhum evento, não há o que filtrar: esconde a barra de filtros.
+  monthFilterContainer.hidden = chaves.length === 0;
 }
 
 // Carrega os eventos cadastrados no banco por meio do backend.
@@ -300,7 +314,12 @@ async function carregarEventos() {
       throw new Error('A resposta da API não contém uma lista de eventos.');
     }
 
-    eventosCarregados = eventos;
+    // A página mostra só os próximos eventos: os que já passaram saem sozinhos,
+    // sem o administrador precisar marcar como Encerrado.
+    const hoje = hojeISO();
+    eventosCarregados = eventos.filter(
+      evento => String(evento.data).slice(0, 10) >= hoje
+    );
 
     // Remove os eventos de exemplo escritos diretamente no HTML.
     eventsList.querySelectorAll('.event-card').forEach(cartao => {
