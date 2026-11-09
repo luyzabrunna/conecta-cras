@@ -129,7 +129,7 @@ function criarCartao(evento) {
   const [ano, mes, dia] = dataTexto.split('-');
   const numeroMes = Number(mes);
 
-  cartao.dataset.month = mes || '';
+  cartao.dataset.month = chaveMes(evento.data);
 
   // Cores das categorias
   const coresCategorias = {

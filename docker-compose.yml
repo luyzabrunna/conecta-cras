@@ -10,7 +10,12 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      # Na primeira vez que o banco sobe (volume vazio), cria as tabelas e os dados de exemplo.
+      # Se o volume já tem dados, o MySQL ignora este arquivo e nada é apagado.
+      - ./backend/config/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
+      # 127.0.0.1 força conexão por rede: só responde quando o MySQL de verdade está pronto,
+      # e não o servidor temporário que roda durante a criação inicial do banco.
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 5s
       timeout: 5s
@@ -36,6 +41,7 @@ services:
       dockerfile: backend/Dockerfile
     container_name: conecta-cras-backend
     restart: unless-stopped
+    # Segredos (JWT_SECRET, senha do Gmail) ficam só no backend/.env, que não vai para o GitHub.
     env_file:
       - ./backend/.env
     environment:
@@ -51,6 +57,8 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
+      # Mantém as dependências instaladas dentro do container. Sem esta linha, a pasta
+      # backend do computador (que no GitHub não tem node_modules) apagaria elas.
       - /app/node_modules
       - ./frontend:/frontend
 

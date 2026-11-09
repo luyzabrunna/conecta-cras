@@ -65,30 +65,34 @@ async function enviarOuvidoria({ id, nome, email, tipo, mensagem }) {
   const protocolo = id ? `#${id}` : '';
   const dataHora = dataHoraAgora();
 
+  // ATENÇÃO: quando a equipe clica em Responder, o Gmail cita este e-mail inteiro na resposta
+  // que vai para o cidadão. Por isso o conteúdo abaixo é escrito como um comprovante de protocolo,
+  // sem instruções ou comentários internos. Não acrescente aqui nada que o cidadão não possa ler.
+  // ATENÇÃO: quando a equipe clica em Responder, o Gmail cola este e-mail inteiro, como citação,
+  // dentro da resposta que o cidadão recebe. Por isso o texto abaixo é escrito como se o cidadão
+  // fosse lê-lo: nada de instruções internas, observações da equipe ou dados que não sejam dele.
   const info = await obterTransporte().sendMail({
     from: { name: NOME_REMETENTE, address: process.env.MAIL_USER.trim() },
     to: process.env.MAIL_TO.trim(),
     replyTo: emailCidadao ? { name: nomeLinha, address: emailCidadao } : undefined,
     subject: umaLinha(`[Ouvidoria] ${rotulo} ${protocolo} de ${nomeLinha}`, 150),
     text:
-      `Nova manifestação pela Ouvidoria do site\n\n` +
+      `Manifestação registrada na Ouvidoria\n\n` +
       `Protocolo: ${protocolo || 'não se aplica'}\n` +
       `Recebida em: ${dataHora}\n` +
       `Tipo: ${rotulo}\n` +
       `Nome: ${nome}\n` +
       `E-mail: ${contato}\n\n` +
-      `Mensagem:\n${mensagem}\n` +
-      (emailCidadao ? `\nPara responder, use o botão Responder do seu e-mail.\n` : ''),
+      `Mensagem:\n${mensagem}\n`,
     html:
-      `<h2>Nova manifestação pela Ouvidoria do site</h2>` +
+      `<h2>Manifestação registrada na Ouvidoria</h2>` +
       `<p><strong>Protocolo:</strong> ${escapar(protocolo || 'não se aplica')}<br>` +
       `<strong>Recebida em:</strong> ${escapar(dataHora)}<br>` +
       `<strong>Tipo:</strong> ${escapar(rotulo)}<br>` +
       `<strong>Nome:</strong> ${escapar(nome)}<br>` +
       `<strong>E-mail:</strong> ${escapar(contato)}</p>` +
       `<h3>Mensagem</h3>` +
-      `<p style="white-space:pre-wrap">${escapar(mensagem)}</p>` +
-      (emailCidadao ? `<p><em>Para responder, use o botão Responder do seu e-mail.</em></p>` : ''),
+      `<p style="white-space:pre-wrap">${escapar(mensagem)}</p>`,
   });
 
   if (info.rejected && info.rejected.length > 0) {

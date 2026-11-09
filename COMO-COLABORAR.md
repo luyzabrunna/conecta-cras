@@ -1,110 +1,124 @@
-# Como acessar e rodar o Conecta CRAS
+# Como rodar e colaborar no Conecta CRAS
 
-Esse guia é pra quem entrou no repositório e nunca mexeu nele. Segue o passo a passo direitinho que dá pra rodar o projeto na sua máquina.
+Este guia é para quem entrou no projeto e quer rodar o sistema no próprio computador. Siga na ordem.
 
-## 1. Aceitando o convite
+## 1. O que instalar
 
-Você vai receber um convite por e-mail (ou notificação no GitHub) pra ser colaboradora do repositório `conecta-cras`. Aceita o convite clicando no link, e pronto — você já pode ver o repositório e, com permissão de "Write", dar push nas suas alterações.
+- **Git**
+- **Docker Desktop**: https://www.docker.com/products/docker-desktop
 
-## 2. Clonando o repositório
+Não precisa instalar Node.js, MySQL nem XAMPP. Tudo roda dentro do Docker.
 
-Com o Git instalado no seu computador, abra o terminal (ou o terminal do VS Code) numa pasta de sua preferência e rode:
+## 2. Aceitar o convite e clonar
+
+Você recebe um convite por e-mail para colaborar no repositório. Aceite, abra um terminal em uma pasta de sua escolha e rode:
 
 ```bash
-git clone https://github.com/usuario/conecta-cras.git
+git clone https://github.com/luyzabrunna/conecta-cras.git
 cd conecta-cras
 ```
 
-Isso baixa uma cópia completa do projeto pra sua máquina.
+## 3. Criar o arquivo de variáveis
 
-## 3. Como o repositório é organizado
+O arquivo `backend/.env` guarda os segredos e **não vem no GitHub**, então cada pessoa cria o seu a partir do modelo.
 
-```
-conecta-cras/
-├── backend/
-│   ├── config/        → conexão com o banco de dados (db.js)
-│   ├── models/         → queries no banco de dados
-│   ├── controllers/    → lógica das requisições
-│   ├── routes/         → caminhos da API
-│   ├── server.js        → arquivo principal do servidor
-│   └── .env             → configurações locais (cada uma cria a sua, não vem do GitHub)
-├── frontend/
-│   ├── public/
-│   │   ├── index.html
-│   │   └── assets/
-│   │       ├── css/
-│   │       ├── js/
-│   │       └── img/
-│   └── admin/           → painel administrativo
-├── docs/                 → documentação do projeto
-├── docker-compose.yml     → sobe o MySQL e o phpMyAdmin
-└── README.md
+```bash
+# PowerShell ou CMD (Windows)
+copy backend\.env.example backend\.env
+
+# Mac, Linux ou Git Bash
+cp backend/.env.example backend/.env
 ```
 
-O backend segue uma arquitetura em camadas: as `routes` recebem a requisição e chamam o `controller` certo, o `controller` cuida da lógica e chama o `model`, e o `model` é quem de fato conversa com o banco através da conexão configurada em `config/db.js`.
+Depois abra o `backend/.env` no VS Code e preencha:
 
-## 4. Tecnologias usadas
+- `JWT_SECRET`: qualquer texto longo e aleatório, só seu
+- `MAIL_PASS`: a senha de aplicativo do e-mail da Ouvidoria. Peça para a Brunna. Se você deixar vazio, o sistema funciona normalmente e só o e-mail da Ouvidoria não é enviado
 
-HTML, CSS e JavaScript puro no frontend (sem framework). Node.js com Express no backend. MySQL como banco de dados, gerenciado através do phpMyAdmin, os dois rodando via Docker.
+Sem o arquivo `backend/.env`, o Docker mostra um erro dizendo que ele não foi encontrado.
 
-## 5. Rodando o projeto
+## 4. Subir o sistema
 
-Você só precisa instalar o Node.js e o Docker localmente — não precisa instalar MySQL na máquina, ele sobe dentro de um container.
+Abra o Docker Desktop e espere ele terminar de iniciar. Na pasta do projeto, onde está o `docker-compose.yml`, rode:
 
-### 5.1 Pré-requisitos
+```bash
+docker compose up -d --build
+```
 
-1. Instale o [Node.js](https://nodejs.org) (versão LTS).
-2. Instale o [Docker Desktop](https://www.docker.com/products/docker-desktop) e deixe ele aberto/rodando.
+A primeira vez demora alguns minutos. O banco é criado sozinho, com as tabelas e dados de exemplo.
 
-### 5.2 Sempre que for começar a trabalhar, siga essa ordem
+## 5. Conferir se funcionou
 
-Essa ordem importa — pular um passo é a causa mais comum de o projeto não abrir.
+```bash
+docker ps
+```
 
-1. **Puxe as últimas alterações do repositório:**
-   ```bash
-   git pull
-   ```
+Devem aparecer três containers: `conecta-cras-mysql`, `conecta-cras-phpmyadmin` e `conecta-cras-backend`.
 
-2. **Configure o `.env`** (só na primeira vez, ou se o `.env.example` tiver mudado): dentro da pasta `backend`, copie o arquivo `.env.example` pra `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   Se o comando não funcionar no seu terminal, duplique o arquivo `.env.example` pelo próprio VS Code e renomeie a cópia pra `.env`. O conteúdo já vem certo, não precisa mudar nada.
+| Endereço | O que é |
+|---|---|
+| http://localhost:3000 | Site público |
+| http://localhost:3000/api/status | Tem que mostrar `status: ok` e `banco: conectado` |
+| http://localhost:3000/admin/login.html | Painel administrativo. Peça o usuário e a senha para a Brunna |
+| http://localhost:8080 | phpMyAdmin, usuário `root` e senha `root` |
 
-3. **Instale/atualize as dependências.** Sempre que o `git pull` trouxer mudança no `package.json` (por exemplo, um pacote novo foi adicionado), rode de novo dentro da pasta `backend`:
-   ```bash
-   npm install
-   ```
+## 6. Comandos do dia a dia
 
-4. **Suba o banco de dados via Docker.** Na raiz do projeto (onde tá o `docker-compose.yml`):
-   ```bash
-   docker compose up -d
-   ```
-   Confirme que os dois containers subiram com `docker ps`. Pra acessar o phpMyAdmin pelo navegador: `http://localhost:8080` (usuário `root`, senha `root`).
+```bash
+docker compose up -d                       # sobe tudo
+docker compose down                        # para tudo, sem apagar os dados
+docker compose logs -f backend             # mostra o que o servidor está fazendo e os erros
+docker compose restart backend             # reinicia o servidor depois de mudar código do backend
+docker compose up -d --build -V backend    # use depois de mudar o package.json
+```
 
-5. **Suba o servidor.** Dentro da pasta `backend`:
-   ```bash
-   npm start
-   ```
-   Acesse `http://localhost:3000` no navegador pra ver o site, e `http://localhost:3000/admin` pra ver o painel administrativo.
+Mudou só HTML, CSS ou JavaScript da pasta `frontend`? Não precisa reiniciar nada, basta recarregar a página com Ctrl+F5.
 
-### 5.3 Deu erro? Checklist rápido
+**Nunca rode `docker compose down -v`.** O `-v` apaga o volume do banco, e com ele todos os eventos, avisos e mensagens.
 
-- **"Cannot GET /..." ou a página não abre:** confirme que apareceu no terminal a mensagem "Servidor rodando em http://localhost:3000". Se não apareceu, o servidor não subiu — olhe o erro em vermelho no terminal.
-- **Erro de conexão com o banco (tipo "ECONNREFUSED"):** o Docker não tá rodando. Confirme que o Docker Desktop tá aberto e rode `docker compose up -d`.
-- **"Cannot find module..." (mysql2, dotenv, etc):** faltou instalar dependências. Rode `npm install` de novo dentro do `backend`.
-- **Ainda não funciona:** confirme que o arquivo `.env` existe dentro do `backend` (não só o `.env.example`).
+## 7. Trabalhando com Git
 
-## 6. Fluxo de trabalho no dia a dia
+Antes de começar, sempre puxe as novidades:
 
-Depois de mexer no projeto, suba suas alterações com:
+```bash
+git pull
+```
+
+Depois de mexer, envie:
 
 ```bash
 git add .
-git commit -m "tipo: descrição curta da mudança"
+git commit -m "tipo: descrição curta do que mudou"
 git push
 ```
 
-Usamos prefixos nos commits pra organizar o histórico: `feat` pra funcionalidade nova, `fix` pra correção de bug, `docs` pra documentação, `chore` pra manutenção/organização (tipo ajustar `.gitignore` ou trocar dependência), `style` pra ajuste visual, e `refactor` pra reorganização de código sem mudar o comportamento.
+Prefixos do commit: `feat` para algo novo, `fix` para correção, `docs` para documentação, `style` para ajuste visual, `refactor` para reorganizar sem mudar o comportamento e `chore` para manutenção.
 
-Qualquer dúvida, chama no grupo!
+**Nunca envie ao GitHub:** o `backend/.env`, que tem senhas, e arquivos de backup do banco, como `backup.sql`, que têm dados de cidadãos.
+
+## 8. Quando algo dá errado
+
+**O Docker diz que não conecta ao servidor.** O Docker Desktop não está aberto. Abra, espere iniciar e rode o comando de novo.
+
+**A porta 3000 já está em uso.** Algo mais está ocupando a porta. Feche programas que rodam um servidor, como um `npm start` antigo, e rode `docker compose up -d` de novo.
+
+**`localhost:3000` recusou a conexão.** Rode `docker compose logs backend` e leia as últimas linhas. A mensagem `Servidor rodando em http://localhost:3000` indica que está tudo certo.
+
+**O backend fica reiniciando sozinho.** Quase sempre é falta do `backend/.env` ou uma variável errada. Veja o erro em `docker compose logs backend`.
+
+**`/api/status` mostra o banco sem conexão.** O MySQL ainda estava iniciando. Espere um minuto e atualize a página.
+
+**O site abre, mas eventos e avisos não aparecem.** Abra `http://localhost:3000/api/eventos`. Se aparecer uma lista, aperte Ctrl+F5 na página. Se aparecer um erro, veja `docker compose logs backend`.
+
+**Mudei o backend e nada mudou.** Rode `docker compose restart backend`.
+
+**O e-mail da Ouvidoria não chega.** Rode `docker compose exec backend node scripts/testar-email.js`. O resultado diz o que está faltando e o que fazer.
+
+## 9. Para refazer o banco do zero
+
+Isso **apaga todos os dados**. Só use se quiser voltar aos dados de exemplo.
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
